@@ -1,0 +1,29 @@
+{
+  "name": "yelpcamp",
+  "version": "1.0.0",
+  "description": "Sign up for a Camping Trip!",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Beschuetzer/Yelpcamp.git"
+  },
+  "keywords": [
+    "Yelp",
+    "Camping",
+    "Guides"
+  ],
+  "author": "Adam Major",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Beschuetzer/Yelpcamp/issues"
+  },
+  "homepage": "https://github.com/Beschuetzer/Yelpcamp#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "ejs": "^3.1.3",
+    "express": "^4.17.1"
+  }
+}

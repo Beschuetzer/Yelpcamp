@@ -1,0 +1,17 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+:root {
+  --default-font-size: 16px;
+  --default-margin-size: 15px;
+}
+
+body {
+  font-size: calc(var(--default-font-size));
+}
+
