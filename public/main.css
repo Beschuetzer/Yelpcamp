@@ -25,6 +25,8 @@ form button {
   margin: 0 0 var(--default-margin-size) 0;
 }
 
+.
+
 .form-control{
   vertical-align: text-top;
   max-width: 100%;
@@ -44,6 +46,12 @@ form button {
   overflow: hidden
 } */
 
+.card-text{
+  height: 72px;
+  text-align: center;
+  vertical-align: middle !important;
+  overflow: hidden;
+}
 .card-img-top {
   height: 200px;
   width: 100% !important;
