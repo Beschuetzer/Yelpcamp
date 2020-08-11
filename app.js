@@ -4,7 +4,6 @@ const app = express();
 const axios = require('axios');
 //May not need the pkgs below here:
 const bodyParser = require('body-parser');
-
 const campgrounds = [
   {alt: "Fiery Nights", name: "Salmon Creek", image: "https://images.pexels.com/photos/1061640/pexels-photo-1061640.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"},
   {alt: "Multi Hued Camping", name: "Social Camping", image: "https://images.pexels.com/photos/699558/pexels-photo-699558.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"},
