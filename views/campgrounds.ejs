@@ -1,0 +1,54 @@
+<%- include("partials/header") %>
+
+
+<nav class="navbar navbar-expand-md navbar-light bg-light py-0 fixed-top">
+  <div class="container px-sm-3">
+    <a class="navbar-brand" href="/">YelpCamp</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li><a class="nav-link" href="/">Login</a></li>
+        <li><a class="nav-link" href="/">Sign Up</a></li>
+        <li class=""><a class="pr-0 nav-link" href="/">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+
+<div id="topContainer" class="container text-center">
+  <header class="jumbotron ">
+    <div class="container">
+      <h1>Welcome to YelpCamp!</h1>
+      <p>View Our Hand-Picked Campgrounds from all over the Planet.</p>
+      <p>
+        <a href="/campgrounds/new" class="btn btn-primary btn-lg">Add a Campground</a>
+      </p>
+    </div>
+  </header class="jumbotron text-align-center">
+  <a href="/">Back</a>
+
+  <div class="row justify-content-center">
+    <% campgrounds.forEach((campground) => { %>
+      <% console.log(campground); %>
+      <div class="campground col-md-6 col-lg-4 col-xl-3">
+        <div class="card w-100 mt-4">
+          <div class="card-img-top" style="background: url(<%= campground.image %>);">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title"><%= campground.name %></h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">More Info</a>
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</div>
+
+<%- include("partials/footer") %>blt

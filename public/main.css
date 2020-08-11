@@ -15,3 +15,23 @@ body {
   font-size: calc(var(--default-font-size));
 }
 
+/* works but not well */
+/* .card-img-top {
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden
+} */
+
+.card-img-top {
+  height: 200px;
+  width: 100% !important;
+  background-size: cover !important;
+  background-position: bottom !important;
+}
+
+
+#topContainer {
+  margin-top: calc(var(--default-margin-size)*4);
+}
