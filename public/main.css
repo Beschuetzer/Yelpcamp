@@ -60,7 +60,7 @@ form button {
 }
 
 .newCampgroundLabel {
-  margin: auto;
+  margin: 15px auto 0 auto;
 }
 
 .title{
@@ -72,8 +72,6 @@ form button {
 }
 
 @media (max-width: 769px) {
-  .formContainer{
-  }
 }
 @media (max-width: 530px) {
   h1 {
