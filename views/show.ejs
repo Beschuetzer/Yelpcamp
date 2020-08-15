@@ -4,7 +4,7 @@
   <div class="jumbotron py-0 px-3">
     <h1 class="my-3"><%= campground.name %></h1>
     <div class="text-center showImg" style="background: url(<%= campground.image %>);"></div>
-    <p class="lead mt-3"><%= campground.description %></p>
+    <p class="lead mt-3"><%- campground.description %></p>
     <form action="/campgrounds/<%= campground._id %>?_method=delete" method="post">
       <button class="btn btn-md btn-danger" type="submit">Delete</button>
     </form>	

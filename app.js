@@ -4,6 +4,7 @@ const express = require('express'),
       axios = require('axios'),
       bodyParser = require('body-parser'),
       mongoose = require('mongoose'),
+      expressSanitizer = require('express-sanitizer');
       methodOverride = require('method-override'),
       dbName = "yelpCamp",
       Campground = require('./models/campground.js');
@@ -23,8 +24,9 @@ app.use(express.static("public"));
 app.use(express.static("views/imgs"));
 app.use(bodyParser.urlencoded([{extended: true}]));
 app.use(methodOverride("_method"));
+app.use(expressSanitizer());
 
-d//allows you to omit .ejs for every file
+//allows you to omit .ejs for every file
 app.set('view engine', 'ejs');
 
 app.listen(3000, function(){
@@ -54,13 +56,14 @@ app.post('/campgrounds', (req,res) =>{
   console.log(req.body)
   const name = req.body.name,
         image = req.body.image,
-        description = req.body.description,
         alt = "A Beautiful Campground Photo Taken by a User";
+  let description = req.body.description;
+  description = req.sanitize(description);
 
   //need to validate data before creating new entry
   const nameValid = name != null & name.trim() !== "" & !name.match(/[<>]/i),
         imageValid = image != null & image.trim() !== "" & !image.match(/[<>]/i),
-        descriptionValid = description != null & description.trim() !== "" & !description.match(/[<>]/i),
+        descriptionValid = description != null & description.trim() !== "",
         altValid = alt != null & alt.trim() !== "" & !alt.match(/[<>]/i);
 
   if (nameValid && imageValid && descriptionValid && altValid){
@@ -80,7 +83,7 @@ app.post('/campgrounds', (req,res) =>{
     });
   }
   else {
-    res.redirect('new')
+    res.redirect('/campgrounds/new')
   }
 });
 
@@ -108,10 +111,35 @@ app.delete('/campgrounds/:id', function (req,res){
   res.redirect('/campgrounds')
 });
 
+app.get('/campgrounds/:id/edit', function (req, res){
+  //Edit -- show edit form for one campgrounds
+  Campground.findById(req.params.id, function (err, matchedItems) {
+    if (err) {
+      console.log("something went wrong finding ID");
+      res.redirect('/');
+    }
+    else {
+      res.render('edit', {campground: matchedItems})
+    }
+  });
+});
+
+app.put('/campgrounds/:id', function (req, res){
+  //Update -- update a particular blogs
+  req.body.campground.body = req.sanitize(req.campground.blog.body)   //sanitize any inputs from 'new.ejs' that use <%-...%> in show.ejs or elsewhere
+  Campground.findByIdAndUpdate(req.params.id, req.body.campground, function (err, updatedItem) {
+    if (err) {
+      console.log("something went wrong updating " + req.params.id);
+      res.redirect('/campgrounds');
+    }
+    else {
+      res.redirect('/campgrounds/' + req.params.id)
+    }
+  });
+});
+
 app.get('*', function(req, res) {
   res.send(`Sorry, ${req.originalUrl} page not found...\nWhat are you doing with your life?`);
 });
 //#endregion
-
-
 
