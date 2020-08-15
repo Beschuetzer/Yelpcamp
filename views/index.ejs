@@ -26,8 +26,8 @@
                 <p class="card-text"><%= campground.description.slice(0,75) + '...'%></p>
             <% } else { %>
               <p class="card-text"><%= campground.description %></p>
-            <% } %>
-            <a href="#" class="btn btn-primary">More Info</a>
+              <% } %>
+            <a href="/campgrounds/<%= campground._id%>" class="btn btn-primary">More Info</a>
           </div>
         </div>
       </div>
@@ -36,9 +36,3 @@
 </div>
 
 <%- include("partials/footer") %>
-
-<% if (condition) { %>
-  
-<% } else { %>
-  
-<% } %>

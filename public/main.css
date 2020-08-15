@@ -52,13 +52,20 @@ form button {
   vertical-align: middle !important;
   overflow: hidden;
 }
-.card-img-top {
+.card-img-top{
   height: 200px;
   width: 100% !important;
   background-size: cover !important;
   background-position: bottom !important;
 }
 
+.showImg{
+  height: 350px;
+  margin: auto;
+  width: 80% !important;
+  background-size: cover !important;
+  background-position: bottom !important;
+}
 .newCampgroundLabel {
   margin: 15px auto 0 auto;
 }
