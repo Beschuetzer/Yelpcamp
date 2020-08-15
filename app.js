@@ -1,3 +1,4 @@
+
 //#region Setting up Packages and Mongoose
 const express = require('express'),
       app = express(),
@@ -7,6 +8,7 @@ const express = require('express'),
       expressSanitizer = require('express-sanitizer'),
       methodOverride = require('method-override'),
       dbName = "yelpCamp",
+      Comment = require('./models/comment.js'),
       Campground = require('./models/campground.js'),
       seedDB = require('./seed.js');
 
@@ -20,16 +22,6 @@ mongoose.connect('mongodb://localhost:27017/' + dbName, {
   
 })
 .catch(error => console.log(error.message));
-
-
-// Campground.find({}, (err,foundItem) => {
-//   if (err){
-//     console.log(err);
-//   }
-//   else {
-//     console.log(foundItem);
-//   }
-// });
 //#endregion
 //#region Configuring Express
 //telling express to serve files in 'public'
@@ -51,7 +43,10 @@ app.get('/', function(req, res){
   res.render('landing');
 });
 
-app.get('/campgrounds', function(req, res){
+//#region Campground Routes
+const campgroundsRoute = '/campgrounds',
+      campgroundsRender = 'campgrounds/';
+app.get(campgroundsRoute, function(req, res){
   //finding all entries in collection
   //first parameter is the condition (use {} for whole collection)
   Campground.find({}, (err, returnedItem) => {
@@ -60,12 +55,12 @@ app.get('/campgrounds', function(req, res){
     }
     else {
       console.log("Found the following: \n" + returnedItem);
-      res.render('index', {campgrounds: returnedItem});
+      res.render(campgroundsRender + 'index', {campgrounds: returnedItem});
     }
   });
 });
 
-app.post('/campgrounds', (req,res) =>{
+app.post(campgroundsRoute, (req,res) =>{
   console.log(req.body)
   const name = req.body.name,
         image = req.body.image,
@@ -91,20 +86,20 @@ app.post('/campgrounds', (req,res) =>{
       }
       else {
         console.log('toAdd saved to database' + returnedItem);
-        res.redirect('/campgrounds');
+        res.redirect(campgroundsRoute);
       }
     });
   }
   else {
-    res.redirect('/campgrounds/new')
+    res.redirect(campgroundsRoute + '/new')
   }
 });
 
-app.get('/campgrounds/new', (req,res) => {
-  res.render('new')
+app.get(campgroundsRoute + '/new', (req,res) => {
+  res.render(campgroundsRender + 'new')
 });
 
-app.get('/campgrounds/:id', (req, res) =>{
+app.get(campgroundsRoute + '/:id', (req, res) =>{
   Campground.findById(req.params.id).populate('comments').exec(function(err,foundItem){
     if (err) {
       console.log("something went wrong finding ID route");
@@ -113,21 +108,23 @@ app.get('/campgrounds/:id', (req, res) =>{
       //need to populate campground comments
 
       console.log(foundItem);
-      res.render('show', {campground: foundItem});
+      res.render(campgroundsRender + 'show', {campground: foundItem});
     }
   });
 });
 
-app.delete('/campgrounds/:id', function (req,res){
+app.delete(campgroundsRoute + '/:id', function (req,res){
   Campground.findByIdAndDelete(req.params.id, function(err){
     if (err){
       console.log(err);
     }
   });
-  res.redirect('/campgrounds')
+  res.redirect(campgroundsRoute)
 });
 
-app.get('/campgrounds/:id/edit', function (req, res){
+
+
+app.get(campgroundsRoute + '/:id/edit', function (req, res){
   //Edit -- show edit form for one campgrounds
   Campground.findById(req.params.id, function (err, matchedItems) {
     if (err) {
@@ -135,24 +132,66 @@ app.get('/campgrounds/:id/edit', function (req, res){
       res.redirect('/');
     }
     else {
-      res.render('edit', {campground: matchedItems})
+      res.render(campgroundsRender + 'edit', {campground: matchedItems})
     }
   });
 });
 
-app.put('/campgrounds/:id', function (req, res){
+app.put(campgroundsRoute + '/:id', function (req, res){
   //Update -- update a particular blogs
-  req.body.campground.body = req.sanitize(req.campground.blog.body)   //sanitize any inputs from 'new.ejs' that use <%-...%> in show.ejs or elsewhere
+  req.body.campground.description = req.sanitize(req.body.campground.description)   //sanitize any inputs from 'new.ejs' that use <%-...%> in show.ejs or elsewhere
   Campground.findByIdAndUpdate(req.params.id, req.body.campground, function (err, updatedItem) {
     if (err) {
       console.log("something went wrong updating " + req.params.id);
-      res.redirect('/campgrounds');
+      res.redirect(campgroundsRoute);
     }
     else {
-      res.redirect('/campgrounds/' + req.params.id)
+      res.redirect(campgroundsRoute + '/' + req.params.id)
     }
   });
 });
+
+//#endregion
+//#region Comments Routes
+const commentsRoute = '/comments';
+app.get(campgroundsRoute + '/:id' + commentsRoute + '/new', function(req,res){
+  Campground.findById(req.params.id, (err, foundItem) =>{
+    if (err){
+      console.log(err);
+    }
+    else {
+      res.render('.' + commentsRoute + "/new", {campground: foundItem});
+    }
+  });
+});
+app.post(campgroundsRoute + '/:id' + commentsRoute, function (req,res) {
+
+  Comment.create({text: req.body.comment.text}, function(err, comment) {
+    if (err){
+      console.log(err);
+    }
+    else {
+      Campground.findById(req.params.id, function (err, campground) {
+        if (err){
+          console.log(err);
+        }
+        else {
+          campground.comments.push(comment);
+          campground.save(function (err) {
+            if (err){
+              console.log(err);
+            }
+            else {
+              console.log("Successfully added comment");
+              res.redirect(campgroundsRoute + '/' + req.params.id)
+            }
+          });      
+        }
+      });
+    }
+  });
+});
+//#endregion
 
 app.get('*', function(req, res) {
   res.send(`Sorry, ${req.originalUrl} page not found...\nWhat are you doing with your life?`);

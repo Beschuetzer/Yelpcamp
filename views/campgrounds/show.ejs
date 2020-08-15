@@ -1,0 +1,39 @@
+<%- include("../partials/header") %>
+
+<div class="container-fluid text-center title">
+  <div class="row">
+    <div class="col-md-3">
+      <p class="lead">YelpCamp</p>
+      <div class="list-group">
+        <li class="list-group-item active">Info 1</li>
+        <li class="list-group-item">Info 2</li>
+        <li class="list-group-item">Info 3</li>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="card" style="w-100">
+        <h1 class="mb-3"><%= campground.name %></h1>
+        <img class="card-img-top" src="<%= campground.image %>"></img>
+        <div class="card-body">
+          <p class="lead mt-3"><%- campground.description %></p>
+      <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-md btn-primary" type="submit">Edit</a>
+      <form action="/campgrounds/<%= campground._id %>?_method=delete" method="post">
+        <button class="btn btn-md btn-danger" type="submit">Delete</button>
+      </form>	
+      <a href="/campgrounds/<%= campground._id %>/comments/new" class="btn btn-md btn-primary">Add Comment</a>
+        </div>
+      </div>
+      
+      
+      <hr>
+      <p>Comments:</p>
+      <% campground.comments.forEach((comment) => { %>
+      <%   console.log(comment); %>
+      <p>"<%= comment.text %>" - <%= comment.author %></p>
+      <% }); %>
+    </div>
+  </div>
+</div>
+   
+
+<%- include("../partials/footer") %>me

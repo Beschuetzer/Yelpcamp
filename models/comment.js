@@ -1,6 +1,6 @@
 const mongoose = require('mongoose'),
       commentSchema = {
-        author: String,
+        author: {type: String, default: "ME!!"},
         text: String,
       };
 

@@ -52,7 +52,7 @@ form button {
 }
 .card-img-top{
   height: 200px;
-  width: 100% !important;
+  width: 100%;
   background-size: cover !important;
   background-position: bottom !important;
 }
@@ -60,7 +60,7 @@ form button {
 .showImg{
   height: 350px;
   margin: auto;
-  width: 80% !important;
+  width: 100% !important;
   background-size: cover !important;
   background-position: bottom !important;
 }

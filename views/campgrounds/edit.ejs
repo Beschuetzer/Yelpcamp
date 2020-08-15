@@ -1,0 +1,23 @@
+<%- include("../partials/header") %>
+
+<div class="container text-center mt-5">
+  <div class="formContainer">
+    <h1 class="title">Edit '<%= campground.name %>'</h1>
+
+    <form action="/campgrounds/<%= campground._id %>?_method=put" method="post" class="text-center">
+      <label for="name" class="newCampgroundLabel">Campground Name:</label>
+      <input value="<%= campground.name %>" type="text"class="form-control" name="campground[name]" id="name" class="" placeholder="Enter a Campground Name">
+      <label for="image" class="newCampgroundLabel">Image Url of Campsite:</label>
+      <input value="<%= campground.image %>" type="text"class="form-control" name="campground[image]" id="image" class="form-control" placeholder="URL to an Image of the Campsite">
+      <label for="image" class="newCampgroundLabel">Description of Campsite:</label>
+      <textarea required rows="10" placeholder="Enter a Description of the Campsite" class="form-control" name="campground[description]"><%= campground.description %>" </textarea>
+      <button class="btn btn-primary btn-sm" type="submit">Submit</button>
+    </form>
+
+    <a href="/campgrounds">View All Campgrounds</a>
+  </div>
+</div>
+
+<%- include("../partials/footer") %>
+
+
