@@ -6,7 +6,14 @@ const campgroundSchema = new mongoose.Schema({
   image: String,
   description: String,
   alt: String,
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+    }
+  ],
 });
+
 
 //creating the campgrounds collection in the db 'yelpCamp'
 const Campground = mongoose.model("Campground", campgroundSchema);

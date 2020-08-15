@@ -4,19 +4,32 @@ const express = require('express'),
       axios = require('axios'),
       bodyParser = require('body-parser'),
       mongoose = require('mongoose'),
-      expressSanitizer = require('express-sanitizer');
+      expressSanitizer = require('express-sanitizer'),
       methodOverride = require('method-override'),
       dbName = "yelpCamp",
-      Campground = require('./models/campground.js');
-      
+      Campground = require('./models/campground.js'),
+      seedDB = require('./seed.js');
 
 mongoose.connect('mongodb://localhost:27017/' + dbName, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log('Connected to yelpCamp!'))
+.then(() => {
+  console.log('Connected to yelpCamp!')
+  seedDB();
+  
+})
 .catch(error => console.log(error.message));
 
+
+// Campground.find({}, (err,foundItem) => {
+//   if (err){
+//     console.log(err);
+//   }
+//   else {
+//     console.log(foundItem);
+//   }
+// });
 //#endregion
 //#region Configuring Express
 //telling express to serve files in 'public'
@@ -92,11 +105,14 @@ app.get('/campgrounds/new', (req,res) => {
 });
 
 app.get('/campgrounds/:id', (req, res) =>{
-  Campground.findById(req.params.id, (err, foundItem) => {
+  Campground.findById(req.params.id).populate('comments').exec(function(err,foundItem){
     if (err) {
-      console.log("something went wrong finding ID");
+      console.log("something went wrong finding ID route");
     }
     else {
+      //need to populate campground comments
+
+      console.log(foundItem);
       res.render('show', {campground: foundItem});
     }
   });
