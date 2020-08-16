@@ -13,9 +13,9 @@
     <div class="col-md-9">
       <div class="card bg-light">
         <img class="img-fluid" id="showImg" src="<%= campground.image %>"></img>
-        <div class="caption-full px-3">
-          <h4 class="pull-right">$9.50/night</h4>
-          <a href="#"><h4 class="pull-left"><%= campground.name %></h4></a>
+        <div class="caption px-3 mt-4">
+          <a href="#"><h4 class="name"><%= campground.name %></h4></a>
+          <h4 class="price">$9.50/night</h4>
         </div>
         <p class="lead mt-3 w-100 text-justify px-3"><%- campground.description %></p>
         <div class="card-body buttons pt-1">
@@ -23,19 +23,23 @@
           <form class="text-left" action="/campgrounds/<%= campground._id %>?_method=delete" method="post">
             <button class="btn btn-md btn-danger buttonWidth" type="submit">Delete</button>
           </form>	
-          <a class="btn btn-md btn-success buttonWidth" href="/campgrounds/<%= campground._id %>/comments/new" >Add Comment</a>
         </div>
       </div>
-      <h2>Comments:</h2>
-      <div class="card">
+      <div class="card mt-3">
+        <div id="commentButtonDiv">
+          <div class="hidden"></div>
+          <a id="commentButton" class="btn btn-md btn-success" href="/campgrounds/<%= campground._id %>/comments/new">Leave a Review</a>
+        </div>
+      <hr class="m-0 styleHRTop">
+
       <% campground.comments.forEach((comment) => { %>
       <%   console.log(comment); %>
         <div class="comment">
-          <span class="author mb-1 mt-3"><%= comment.author %></span> 
-          <span class="dateCreated mt-3">10 days ago</span>
+          <span class="author mb-1 mt-3"><strong><%= comment.author %></strong></span> 
+          <span class="dateCreated mt-3"><em>10 days ago</em></span>
           <p class="commentText mb-3"><%= comment.text %></p>
         </div>
-        <hr class="m-0">
+        <hr class="m-0 styleHRComments">
         <% }); %>
       </div>
     </div>

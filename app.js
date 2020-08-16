@@ -1,4 +1,3 @@
-
 //#region Setting up Packages and Mongoose
 const express = require('express'),
       app = express(),
@@ -25,9 +24,8 @@ mongoose.connect('mongodb://localhost:27017/' + dbName, {
 //#endregion
 //#region Configuring Express
 //telling express to serve files in 'public'
-app.use(express.static("public"));
-app.use(express.static("views/imgs"));
-app.use(bodyParser.urlencoded([{extended: true}]));
+app.use(express.static(__dirname + "/public"));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
 app.use(expressSanitizer());
 

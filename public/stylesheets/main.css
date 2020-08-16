@@ -10,6 +10,7 @@
   --default-font-size: 16px;
   --default-margin-size: 16px;
   --landing-form-width: 85%;
+  --bg-comments:  #e5e5e5;
 }
 
 body {
@@ -20,6 +21,20 @@ form label{
   font-style: italic;
 }
 
+hr {
+  background-color: var(--bg-comments);
+}
+
+.styleHRTop { 
+  height: 10px;
+	border: 0;
+  box-shadow: 0 10px 10px -10px #8c8b8b inset;
+} 
+
+.styleHRComments {
+  border-top: 1px dotted #8c8b8b;
+	border-bottom: 1px dotted #fff;
+}
 
 .form-control{
   vertical-align: text-top;
@@ -41,8 +56,8 @@ form label{
 } */
 
 .buttonWidth{
-  max-width:135px;
-  width: 135px;
+  max-width:80px;
+  width: 80px;
   margin: 0 calc(var(--default-margin-size)/2);
 }
 
@@ -60,7 +75,7 @@ form label{
 }
 
 .comment {
-  background-color: #e5e5e5;
+  background-color: var(--bg-comments);
   padding: 0 var(--default-margin-size);
   display: grid;
   max-width: 100%;
@@ -85,30 +100,17 @@ form label{
   text-align: right;
 }
 
-#showImg{
-  height: auto;
-  margin: auto;
-  width: 100%;
-  border: 1px black solid;
-  margin-bottom: 5px;
-}
-
-.pull-right{
-  margin-top: var(--default-margin-size);
-  float: right; 
-  display: block;
-}
-
-.pull-left{
-  margin-top: var(--default-margin-size);
-  float: left; 
-  display: block;
+.hidden{
+  opacity: 0;
+  max-width: 0;
+  max-height: 0;
+  width: 0;
+  height: 0;
 }
 
 .buttons {
   display: flex;
   justify-content: center;
-  
 }
 
 .newCampgroundLabel {
@@ -119,11 +121,45 @@ form label{
   margin: calc(var(--default-margin-size)*3.58) auto var(--default-margin-size) auto;
 }
 
+.caption{
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--default-margin-size);
+  align-items: center;
+}
+
+.price{
+  font-size: 1.1em;
+}
+
+.name{
+  
+}
+
 #topContainer {
   margin-top: calc(var(--default-margin-size)*4);
 }
 
+#showImg{
+  height: auto;
+  width: 100%;
+}
+
+#commentButton{
+  margin: var(--default-margin-size) var(--default-margin-size) var(--default-margin-size)  0;
+}
+
+#commentButtonDiv{
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--bg-comments);
+    align-items: center;
+}
+
 @media (max-width: 769px) {
+  .card {
+    margin: var(--default-margin-size) 0 0 0;
+  }
 }
 @media (max-width: 530px) {
   h1 {
