@@ -6,8 +6,11 @@ const express = require('express'),
       mongoose = require('mongoose'),
       expressSanitizer = require('express-sanitizer'),
       methodOverride = require('method-override'),
+      passport = require('passport'),   		//only if doing authentication
+      localStrategy = require('passport-local'), 		//only if doing authentication
       dbName = "yelpCamp",
       Comment = require('./models/comment.js'),
+      User = require('./models/user')
       Campground = require('./models/campground.js'),
       seedDB = require('./seed.js');
 
@@ -28,8 +31,19 @@ app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
 app.use(expressSanitizer());
+//below used only for authentication
+app.use(require('express-session')({
+	secret: "JFIENCJWI@K#!)#AMLKdoenKJefndnw93uKSDKSLPQKdzz7d52q39kdsf",
+	resave: false,
+	saveUninitialized: false,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());           //encodes User class/model and puts into session
+passport.deserializeUser(User.deserializeUser());       //decodes User class/model and removes from session
 
-//allows you to omit .ejs for every file
+      //allows you to omit .ejs for every file
 app.set('view engine', 'ejs');
 
 app.listen(3000, function(){
@@ -40,7 +54,6 @@ app.listen(3000, function(){
 app.get('/', function(req, res){
   res.render('landing');
 });
-
 //#region Campground Routes
 const campgroundsRoute = '/campgrounds',
       campgroundsRender = 'campgrounds/';
@@ -52,7 +65,6 @@ app.get(campgroundsRoute, function(req, res){
       console.log("something went wrong finding");
     }
     else {
-      console.log("Found the following: \n" + returnedItem);
       res.render(campgroundsRender + 'index', {campgrounds: returnedItem});
     }
   });
@@ -83,7 +95,6 @@ app.post(campgroundsRoute, (req,res) =>{
         console.log("something went wrong");
       }
       else {
-        console.log('toAdd saved to database' + returnedItem);
         res.redirect(campgroundsRoute);
       }
     });
@@ -103,9 +114,6 @@ app.get(campgroundsRoute + '/:id', (req, res) =>{
       console.log("something went wrong finding ID route");
     }
     else {
-      //need to populate campground comments
-
-      console.log(foundItem);
       res.render(campgroundsRender + 'show', {campground: foundItem});
     }
   });
@@ -190,7 +198,68 @@ app.post(campgroundsRoute + '/:id' + commentsRoute, function (req,res) {
   });
 });
 //#endregion
+//#region Authentication Routes
+app.get('/login', function(req,res){
+  res.render('login');
+});
 
+app.post('/login', passport.authenticate('local', {
+  successRedirect: "/campgrounds",
+  failureRedirect: "/login",
+}),function(req,res){
+  //callback
+});
+
+app.get('/logout', function(req,res){
+  req.logout();       //passport's logout()
+  res.redirect('/campgrounds');
+});
+
+app.get('/register', (req,res) =>{
+    //Show Signup Form
+    res.render('register');
+});
+
+app.post('/register', (req,res) =>{
+    //Signing up a New User
+   //register(username, passwordToCreateHashFrom, callback)
+   //THE USERNAME MUST BE NAMED EXACTLY 'username' IN THE NAME ATTR FOR THE SUBMITTING register.ejs FORM as well as the User model must have 'username' key
+    User.register(new User({username: req.body.username}), req.body.password, function(err, user){
+        if (err){
+            console.log(err);
+            return res.render('register');
+        }
+        else {
+            console.log("else start");
+            passport.authenticate('local')(req, res, function(){		//'local' is the passport authentication strategy
+              //Do something when authenticated
+              console.log(user._id);              
+            });
+            res.redirect('/campgrounds');
+        }
+    });
+
+    const userId = User.find({username: req.body.username});
+    User.findByIdAndUpdate(userId, function (err, foundItem) {
+      if (err){
+        console.log("error");
+        console.log(err);
+      }
+      else {
+        console.log("embeded else");
+        for (const key in req.body.userInfo) {
+          if (object.hasOwnProperty(key)) {
+            const value = object[key];
+            foundItem.key = value;
+          }
+        }
+        console.log(`foundItem: ${foundItem}`);
+        foundItem.save();
+      }
+    });
+});
+
+//#endregion
 app.get('*', function(req, res) {
   res.send(`Sorry, ${req.originalUrl} page not found...\nWhat are you doing with your life?`);
 });

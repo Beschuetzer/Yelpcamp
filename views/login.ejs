@@ -1,0 +1,14 @@
+<%- include("partials/header") %>
+    <h1>Login to your Yelp Camp Account</h1>
+    <form action="/login" method="post">
+        <label for="username">
+            Username:
+            <input type="text" name="username" id="username" placeholder="Enter Your Username">
+        </label>
+        <label for="password">
+            Password:
+            <input type="password" name="password" id="password" placeholder="Enter Your Password">
+        </label>
+        <button type="submit">Register</button>
+    </form>
+<%- include("partials/footer") %>

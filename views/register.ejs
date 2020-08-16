@@ -1,0 +1,22 @@
+<%- include("partials/header") %>
+    <h1>Register a Yelp Camp Account</h1>
+    <form action="/register" method="post">
+        <label for="username">
+            Username:
+            <input type="text" name="username" id="username" placeholder="Enter a Username">
+        </label>
+        <label for="email">
+            Email:
+            <input type="email" name="userInfo[email]" id="email" placeholder="Enter an email">
+        </label>
+        <label for="zipCode">
+            Zip Code:
+            <input type="zipCode" name="userInfo[zipCode]" id="zipCode" placeholder="Enter your Zip Code">
+        </label>
+        <label for="password">
+            Password:
+            <input type="password" name="password" id="password" placeholder="Enter a Password">
+        </label>
+        <button type="submit">Register</button>
+    </form>
+<%- include("partials/footer") %>
