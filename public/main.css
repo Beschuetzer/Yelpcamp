@@ -20,10 +20,6 @@ form label{
   font-style: italic;
 }
 
-form button {
-  width: 100%;
-  margin: 0 0 var(--default-margin-size) 0;
-}
 
 .form-control{
   vertical-align: text-top;
@@ -44,6 +40,12 @@ form button {
   overflow: hidden
 } */
 
+.buttonWidth{
+  max-width:135px;
+  width: 135px;
+  margin: 0 calc(var(--default-margin-size)/2);
+}
+
 .card-text{
   height: 72px;
   text-align: center;
@@ -57,13 +59,58 @@ form button {
   background-position: bottom !important;
 }
 
-.showImg{
-  height: 350px;
-  margin: auto;
-  width: 100% !important;
-  background-size: cover !important;
-  background-position: bottom !important;
+.comment {
+  background-color: #e5e5e5;
+  padding: 0 var(--default-margin-size);
+  display: grid;
+  max-width: 100%;
+  grid-template: 
+          "author date" auto     /*here var(..) specifies the length of this row */
+          "comment comment" 1fr                       
+          / 1fr 1fr;      /*the '/...' line represents the length of the corresponding column */
 }
+
+.author {
+  grid-area: author;
+  text-align: left;
+}
+
+.commentText {
+  grid-area: comment;
+  text-align: justify;
+}
+
+.dateCreated {
+  grid-area: date;
+  text-align: right;
+}
+
+#showImg{
+  height: auto;
+  margin: auto;
+  width: 100%;
+  border: 1px black solid;
+  margin-bottom: 5px;
+}
+
+.pull-right{
+  margin-top: var(--default-margin-size);
+  float: right; 
+  display: block;
+}
+
+.pull-left{
+  margin-top: var(--default-margin-size);
+  float: left; 
+  display: block;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  
+}
+
 .newCampgroundLabel {
   margin: 15px auto 0 auto;
 }
