@@ -137,6 +137,12 @@ hr {
   justify-content: left;
 }
 
+.author {
+  display: flex;
+  justify-content: space-between;
+  margin-left: var(--default-margin-size) ;
+}
+
 .loggedInName{
   margin-right: var(--default-margin-size);
   color: rgba(0,0,0,.5);

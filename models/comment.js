@@ -1,6 +1,12 @@
 const mongoose = require('mongoose'),
       commentSchema = {
-        author: {type: String, default: "ME!!"},
+        author: {
+          id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+          },
+          username: String,
+        },
         text: String,
       };
 

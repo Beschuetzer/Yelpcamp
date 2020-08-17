@@ -38,16 +38,21 @@ router.post('/', isLoggedIn, function (req,res) {
           console.log(err);
         }
         else {
-          campground.comments.push(comment);
-          campground.save(function (err) {
-            if (err){
-              console.log(err);
-            }
-            else {
-              console.log("Successfully added comment");
-              res.redirect(campgroundsRoute + '/' + req.params.id)
-            }
-          });      
+            //add username and id to comment
+            comment.author.id = req.user._id;
+            comment.author.username = req.user.username;
+            comment.save();
+            console.log(comment);
+            campground.comments.push(comment);
+            campground.save(function (err) {
+                if (err){
+                console.log(err);
+                }
+                else {
+                console.log("Successfully added comment");
+                res.redirect(campgroundsRoute + '/' + req.params.id)
+                }
+            });      
         }
       });
     }

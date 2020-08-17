@@ -45,11 +45,16 @@ router.post('/',  isLoggedIn, (req,res) =>{
         altValid = alt != null & alt.trim() !== "" & !alt.match(/[<>]/i);
 
   if (nameValid && imageValid && descriptionValid && altValid){
+    const author = 
     Campground.create({
       name: name,
       image: image,
       description: description,
       alt: alt,
+      author: {
+        id: req.user._id,
+        username: req.user.username,
+      },
     }, function (err, returnedItem) {
       if (err) {
         console.log("something went wrong");

@@ -17,25 +17,29 @@
           <a href="#"><h4 class="name"><%= campground.name %></h4></a>
           <h4 class="price">$9.50/night</h4>
         </div>
+        <div class="author">
+          <h6>by <a href="#"><%= campground.author.username %></h6></a>
+          <div class="hidden"></div>
+        </div>
         <p class="lead mt-3 w-100 text-justify px-3"><%- campground.description %></p>
         <div class="card-body buttons pt-1">
-          <a class="btn btn-md btn-primary buttonWidth" href="/campgrounds/<%= campground._id %>/edit" type="submit">Edit</a>
+          <a class="btn btn-md btn-outline-primary buttonWidth" href="/campgrounds/<%= campground._id %>/edit" type="submit">Edit</a>
           <form class="text-left" action="/campgrounds/<%= campground._id %>?_method=delete" method="post">
-            <button class="btn btn-md btn-danger buttonWidth" type="submit">Delete</button>
+            <button class="btn btn-md btn-outline-danger buttonWidth" type="submit">Delete</button>
           </form>	
         </div>
       </div>
       <div class="card mt-3">
         <div id="commentButtonDiv">
           <div class="hidden"></div>
-          <a id="commentButton" class="btn btn-md btn-success" href="/campgrounds/<%= campground._id %>/comments/new">Leave a Review</a>
+          <a id="commentButton" class="btn btn-md btn-outline-success" href="/campgrounds/<%= campground._id %>/comments/new">Leave a Review</a>
         </div>
       <hr class="m-0 styleHRTop">
 
       <% campground.comments.forEach((comment) => { %>
         <hr class="m-0 styleHRComments">
         <div class="comment">
-          <span class="author mb-1 mt-3"><strong><%= comment.author %></strong></span> 
+          <span class="author mb-1 mt-3"><strong><%= comment.author.username %></strong></span> 
           <span class="dateCreated mt-3"><em>10 days ago</em></span>
           <p class="commentText mb-3"><%= comment.text %></p>
         </div>

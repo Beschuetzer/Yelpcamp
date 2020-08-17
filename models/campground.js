@@ -12,6 +12,13 @@ const campgroundSchema = new mongoose.Schema({
       ref: "Comment",
     }
   ],
+  author: {
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    username: String,
+  }
 });
 
 //creating the campgrounds collection in the db 'yelpCamp'
