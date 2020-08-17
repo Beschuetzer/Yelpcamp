@@ -4,14 +4,15 @@
   <div class="formContainer">
     <h1>Add New Comment</h1>
     <h3>'<%=campground.name %>'</h3>
-    <img class="card w-100" src="<%= campground.image %>" alt="">
-    <label for="description">Comment:</label>
+    <img class="card w-100 mb-3" src="<%= campground.image %>" alt="">
+    <div class="text-left">
+      <label class="" for="description">Comment:</label>
+
+    </div>
     <form action="/campgrounds/<%= campground._id%>/comments" method="post" class="text-center w-100">
       <textarea required rows="10" id="description" placeholder="Thoughts on '<%= campground.name %>'?" class="form-control w-100" name="comment[text]"></textarea>
-      <button class="btn btn-primary btn-sm" type="submit">Submit</button>
+      <button class="form-control btn btn-outline-success btn-md" type="submit">Submit</button>
     </form>
-
-    <a href="/campgrounds">View All Campgrounds</a>
   </div>
 </div>
 

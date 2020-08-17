@@ -33,13 +33,12 @@
       <hr class="m-0 styleHRTop">
 
       <% campground.comments.forEach((comment) => { %>
-      <%   console.log(comment); %>
+        <hr class="m-0 styleHRComments">
         <div class="comment">
           <span class="author mb-1 mt-3"><strong><%= comment.author %></strong></span> 
           <span class="dateCreated mt-3"><em>10 days ago</em></span>
           <p class="commentText mb-3"><%= comment.text %></p>
         </div>
-        <hr class="m-0 styleHRComments">
         <% }); %>
       </div>
     </div>

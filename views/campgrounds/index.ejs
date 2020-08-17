@@ -15,7 +15,6 @@
 
   <div class="row justify-content-center">
     <% campgrounds.forEach((campground) => { %>
-      <% console.log(campground); %>
       <div class="campground col-md-6 col-lg-4 col-xl-3">
         <div class="card w-100 mt-4">
           <div class="card-img-top" style="background: url(<%= campground.image %>);">
@@ -26,7 +25,7 @@
                 <p class="card-text"><%- campground.description.slice(0,75) + '...'%></p>
             <% } else { %>
               <p class="card-text"><%- campground.description %></p>
-              <% } %>
+            <% } %>
             <a href="/campgrounds/<%= campground._id%>" class="btn btn-primary">More Info</a>
           </div>
         </div>

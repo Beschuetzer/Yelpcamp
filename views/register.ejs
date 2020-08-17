@@ -1,22 +1,43 @@
 <%- include("partials/header") %>
-    <h1>Register a Yelp Camp Account</h1>
-    <form action="/register" method="post">
-        <label for="username">
-            Username:
-            <input type="text" name="username" id="username" placeholder="Enter a Username">
-        </label>
-        <label for="email">
-            Email:
-            <input type="email" name="userInfo[email]" id="email" placeholder="Enter an email">
-        </label>
-        <label for="zipCode">
-            Zip Code:
-            <input type="zipCode" name="userInfo[zipCode]" id="zipCode" placeholder="Enter your Zip Code">
-        </label>
-        <label for="password">
-            Password:
-            <input type="password" name="password" id="password" placeholder="Enter a Password">
-        </label>
-        <button type="submit">Register</button>
-    </form>
+
+<div class="mt-5 container text-center">
+    <div class="jumbotron mb-2">
+        <h1>Create a Yelp Camp Account</h1>
+    </div>
+    <div class="container w-50">
+
+
+        <form action="/register" method="post">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input class="form-control" required type="text" name="username" id="username" placeholder="Enter a Username">
+            </div>
+            <div class="form-group">
+                <label for="username">Email:</label>
+                <input class="form-control mb-0" required type="email" name="userInfo[email]" id="email" placeholder="Enter an email">
+                <div class="formCheckbox">
+                    <small id="" class="form-text text-muted">We never share your email with anyone.</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="username">Zip Code:</label>
+                <input required class="form-control" minlength="5" maxlength="9" type="number" name="userInfo[zipCode]" id="zipCode" placeholder="Enter your Zip Code">
+            </div>
+            <div class="form-group">
+                <label for="username">Password:</label>
+                <input class="form-control" required type="password" name="password" id="password" placeholder="Enter a Password">
+                <div class="formCheckbox">
+                    <input id="passwordCheckbox" class="form-check-input" type="checkbox" onclick="showPassword()">
+                    <label for="passwordCheckbox" class="mt-0 form-check-label">Show Password</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <input required type="checkbox" id="cb_privacyPolicy" class="form-check-input"></input>
+                <label class="form-check-label" for="cb_privacyPolicy">I have read and agree to YelpCamp's <a href="#">Privacy Policy</a></label>
+            </div>
+            <button class="btn btn-md btn-outline-success" type="submit">Register</button>
+        </form>
+    </div>
+</div>
+
 <%- include("partials/footer") %>

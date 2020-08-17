@@ -1,14 +1,20 @@
 <%- include("partials/header") %>
-    <h1>Login to your Yelp Camp Account</h1>
-    <form action="/login" method="post">
-        <label for="username">
-            Username:
-            <input type="text" name="username" id="username" placeholder="Enter Your Username">
-        </label>
-        <label for="password">
-            Password:
-            <input type="password" name="password" id="password" placeholder="Enter Your Password">
-        </label>
-        <button type="submit">Register</button>
-    </form>
+    <div class="mt-5 container text-center">
+        <div class="jumbotron mb-2">
+            <h1>Login to YelpCamp</h1>
+
+        </div>
+        <form action="/login" method="post">
+            <label for="username">
+                Username:
+                <input class="form-control" type="text" name="username" id="username" placeholder="Enter Your Username">
+            </label>
+            <label for="password">
+                Password:
+                <input class="form-control mx-2"  type="password" name="password" id="password" placeholder="Enter Your Password">
+            </label>
+            <button class=" ml-3 btn btn-md btn-outline-success" type="submit">Login</button>
+        </form>
+    </div>
+
 <%- include("partials/footer") %>

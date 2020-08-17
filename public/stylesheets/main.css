@@ -132,8 +132,19 @@ hr {
   font-size: 1.1em;
 }
 
-.name{
-  
+.formCheckbox{
+  display: flex;
+  justify-content: left;
+}
+
+.loggedInName{
+  margin-right: var(--default-margin-size);
+  color: rgba(0,0,0,.5);
+}
+
+.loggedInName:hover {
+  text-decoration: none;
+  color: rgba(0,0,0,.8);
 }
 
 #topContainer {
