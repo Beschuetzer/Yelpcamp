@@ -23,12 +23,14 @@
         </div>
         <p class="lead mt-3 w-100 text-justify px-3"><%- campground.description %></p>
         <% console.log(campground.author.id) %>
+        <% if (currentUser && currentUser._id.equals(campground.author.id)) { %>
         <div class="card-body buttons pt-1">
           <a class="btn btn-md btn-outline-primary buttonWidth" href="/campgrounds/<%= campground._id %>/edit" type="submit">Edit</a>
           <form class="text-left" action="/campgrounds/<%= campground._id %>?_method=delete" method="post">
             <button class="btn btn-md btn-outline-danger buttonWidth" type="submit">Delete</button>
           </form>	
         </div>
+        <% } %>
       </div>
       <div class="card mt-3">
         <div id="commentButtonDiv">
