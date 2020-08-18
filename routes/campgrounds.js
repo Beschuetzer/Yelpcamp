@@ -88,7 +88,7 @@ router.delete('/:id', isLoggedIn, function (req,res){
       console.log(err);
     }
   });
-  res.redirect('/')
+  res.redirect('/campgrounds')
 });
 
 //Campground Edit
@@ -103,6 +103,13 @@ router.get('/:id/edit', isLoggedIn, function (req, res){
     }
   });
 });
+
+function isAuthorized(req, res, next){
+  if (req.user.username){
+    next();
+  }
+  res.redirect('/login');
+}
 
 //Campground Update
 router.put('/:id', isLoggedIn, function (req, res){
