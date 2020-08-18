@@ -16,6 +16,10 @@ router.get('/', function(req, res){
     res.render('landing');
   });
 
+router.get('/privacypolicy', function(req,res) {
+    res.render('privacypolicy');
+});
+
 //login
 router.get('/login', function(req,res){
     res.render('login');

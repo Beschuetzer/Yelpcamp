@@ -11,6 +11,7 @@
   --default-margin-size: 16px;
   --landing-form-width: 85%;
   --bg-comments:  #e5e5e5;
+  --bg-jumbtron: #e9ecef;
 }
 
 body {
@@ -135,12 +136,29 @@ hr {
 .formCheckbox{
   display: flex;
   justify-content: left;
+  vertical-align: middle;
+  align-items: center;
 }
 
 .author {
   display: flex;
   justify-content: space-between;
   margin-left: var(--default-margin-size) ;
+}
+
+.textboxes{
+  width: 450px;
+  background: var(--bg-jumbtron);
+  padding: var(--default-margin-size);
+}
+
+.form-check-input{
+  margin: 0 0 0 2px;
+}
+
+.form-check-label{
+  margin-left: 25px;
+  text-align: left;
 }
 
 .loggedInName{
@@ -151,6 +169,10 @@ hr {
 .loggedInName:hover {
   text-decoration: none;
   color: rgba(0,0,0,.8);
+}
+
+#password{
+  margin-bottom: 0px;
 }
 
 #topContainer {
