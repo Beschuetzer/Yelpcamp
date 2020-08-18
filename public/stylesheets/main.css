@@ -75,6 +75,10 @@ hr {
   background-position: bottom !important;
 }
 
+.bg-lessLight{
+  background: rgba(0, 0, 0, 1);
+}
+
 .comment {
   background-color: var(--bg-comments);
   padding: 0 var(--default-margin-size);
@@ -131,6 +135,16 @@ hr {
 
 .price{
   font-size: 1.1em;
+  color: var(--bg-jumbtron);
+}
+
+.transition {
+  height: 50px;
+  background: linear-gradient(to bottom, black, grey);
+}
+
+.card-body{
+  border-radius: 0;
 }
 
 .formCheckbox{
@@ -169,6 +183,11 @@ hr {
 .loggedInName:hover {
   text-decoration: none;
   color: rgba(0,0,0,.8);
+}
+
+#showMain{
+  background: black;
+  padding-top: 15px;
 }
 
 #password{
