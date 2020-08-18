@@ -12,7 +12,7 @@ const express = require('express'),
       Comment = require('./models/comment.js'),
       User = require('./models/user')
       Campground = require('./models/campground.js'),
-      seedDB = require('./seed.js'),
+      seedDB = require('./helpers/seed'),
       indexRoutes = require('./routes/index'),
       commentRoutes = require('./routes/comments'),
       campgroundRoutes = require('./routes/campgrounds');
@@ -23,10 +23,10 @@ mongoose.connect('mongodb://localhost:27017/' + dbName, {
 })
 .then(() => {
   console.log('Connected to yelpCamp!')
-  seedDB();
   
 })
 .catch(error => console.log(error.message));
+  seedDB();
 //#endregion
 //#region Configuring Express
 //telling express to serve files in 'public'

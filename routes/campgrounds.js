@@ -4,12 +4,7 @@ const express = require('express'),
       Campground = require('../models/campground'),
       campgroundsRender = 'campgrounds/';
 
-function isLoggedIn (req, res, next){
-    if (req.isAuthenticated()){
-      return next();
-    }
-    res.redirect('/login');
-}
+
 
 //Campground Index
 router.get('/', function(req, res){
@@ -82,7 +77,7 @@ router.get('/:id', (req, res) =>{
 });
 
 //Campground Delete
-router.delete('/:id', isLoggedIn, function (req,res){
+router.delete('/:id', checkCampgroundOwnership, function (req,res){
   Campground.findByIdAndDelete(req.params.id, function(err){
     if (err){
       console.log(err);
@@ -92,27 +87,14 @@ router.delete('/:id', isLoggedIn, function (req,res){
 });
 
 //Campground Edit
-router.get('/:id/edit', isLoggedIn, function (req, res){
-  Campground.findById(req.params.id, function (err, matchedItems) {
-    if (err) {
-      console.log("something went wrong finding ID");
-      res.redirect('/');
-    }
-    else {
-      res.render(campgroundsRender + 'edit', {campground: matchedItems})
-    }
+router.get('/:id/edit', checkCampgroundOwnership, function (req, res){
+  Campground.findById(req.params.id, function(err, matchedItem) {
+    res.render(campgroundsRender + 'edit', {campground: matchedItem})
   });
 });
 
-function isAuthorized(req, res, next){
-  if (req.user.username){
-    next();
-  }
-  res.redirect('/login');
-}
-
 //Campground Update
-router.put('/:id', isLoggedIn, function (req, res){
+router.put('/:id', checkCampgroundOwnership, function (req, res){
   req.body.campground.description = req.sanitize(req.body.campground.description)   //sanitize any inputs from 'new.ejs' that use <%-...%> in show.ejs or elsewhere
   Campground.findByIdAndUpdate(req.params.id, req.body.campground, function (err, updatedItem) {
     if (err) {
@@ -127,3 +109,33 @@ router.put('/:id', isLoggedIn, function (req, res){
 
 module.exports = router;
 
+function isLoggedIn (req, res, next){
+  if (req.isAuthenticated()){
+    return next();
+  }
+  res.redirect('/login');
+}
+
+function checkCampgroundOwnership(req, res, next){
+  if (req.isAuthenticated()){
+    Campground.findById(req.params.id, function (err, matchedItem) {
+      if (err) {
+        //if error finding
+        console.log("something went wrong finding campground");
+        res.redirect('back');
+      }
+      else {
+        if (req.user._id.equals(matchedItem.author.id)){
+          next();
+        }
+        else {
+          //if not authorized
+          res.redirect('back');
+        }
+      }
+    });
+  } else {
+    //if not logged in
+    res.redirect('back');
+  }
+}
