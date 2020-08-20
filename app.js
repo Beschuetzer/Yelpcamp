@@ -54,7 +54,7 @@ app.use(function (req, res, next){
 });
 
 //importing router routes from '/router
-app.use("/campgrounds/:id/comments", commentRoutes);
+app.use("/campgrounds/:campgroundId/comments", commentRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use(indexRoutes);
 
@@ -65,3 +65,5 @@ app.listen(3000, function(){
   console.log("Starting Yelp Camp Server...");
 });
 //#endregion
+
+//TODO: find a way to go to the last page when logging in

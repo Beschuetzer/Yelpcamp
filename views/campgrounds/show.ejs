@@ -42,9 +42,18 @@
       <% campground.comments.forEach((comment) => { %>
         <hr class="m-0 styleHRComments">
         <div class="comment">
-          <span class="author mt-3 ml-0 mb-0"><strong><%= comment.author.username %></strong></span> 
+          <div class="edit">
+              <span class="author mt-3 ml-0 mb-0"><strong><%= comment.author.username %></strong></span> 
+          <% if (currentUser && currentUser._id.equals(comment.author.id)) { %>
+              <a class="scaled" href="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>/edit"><i class="scaleEdit far fa-edit"></i></a>
+              <form id="" action="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>?_method=delete" method="post">
+                <button id="deleteComment" class="scaleDelete" type="submit"><i class="far fa-trash-alt"></i></button>
+              </form>
+          <% } %>
+            </div>
           <span class="dateCreated mt-3"><em>10 days ago</em></span>
           <p class="commentText mb-3"><%= comment.text %></p>
+          
         </div>
         <% }); %>
       </div>

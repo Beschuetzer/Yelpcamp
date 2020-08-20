@@ -8,6 +8,9 @@ const mongoose = require('mongoose'),
           username: String,
         },
         text: String,
+        date: {
+          type: Date, default: Date.now(),
+        }
       };
 
 //Like a return for the file

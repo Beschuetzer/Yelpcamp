@@ -2,9 +2,8 @@
 const express = require('express'),
       router = express.Router(),
       Campground = require('../models/campground'),
-      campgroundsRender = 'campgrounds/';
-
-
+      campgroundsRender = 'campgrounds/',
+      Comment = require('../models/comment');
 
 //Campground Index
 router.get('/', function(req, res){
@@ -26,7 +25,6 @@ router.get('/new', isLoggedIn, (req,res) => {
 
 //Campground Create
 router.post('/',  isLoggedIn, (req,res) =>{
-  console.log(req.body)
   const name = req.body.name,
         image = req.body.image,
         alt = "A Beautiful Campground Photo Taken by a User";
@@ -65,8 +63,8 @@ router.post('/',  isLoggedIn, (req,res) =>{
 });
 
 //Campground Show
-router.get('/:id', (req, res) =>{
-  Campground.findById(req.params.id).populate('comments').exec(function(err,foundItem){
+router.get('/:campgroundId', (req, res) =>{
+  Campground.findById(req.params.campgroundId).populate('comments').exec(function(err,foundItem){
     if (err) {
       console.log("something went wrong show route");
     }
@@ -77,32 +75,44 @@ router.get('/:id', (req, res) =>{
 });
 
 //Campground Delete
-router.delete('/:id', checkCampgroundOwnership, function (req,res){
-  Campground.findByIdAndDelete(req.params.id, function(err){
+router.delete('/:campgroundId', checkCampgroundOwnership, function (req,res){
+  Campground.findByIdAndDelete(req.params.campgroundId, function(err, deletedCampground){
     if (err){
       console.log(err);
+    }
+    else {
+      console.log(deletedCampground);
+      deletedCampground.comments.forEach(comment => {
+        Comment.findByIdAndDelete(comment, function (err, deletedComment) {
+          if (err){
+            console.log(err);
+          }
+          else {
+          }
+        });
+      });
     }
   });
   res.redirect('/campgrounds')
 });
 
 //Campground Edit
-router.get('/:id/edit', checkCampgroundOwnership, function (req, res){
-  Campground.findById(req.params.id, function(err, matchedItem) {
+router.get('/:campgroundId/edit', checkCampgroundOwnership, function (req, res){
+  Campground.findById(req.params.campgroundId, function(err, matchedItem) {
     res.render(campgroundsRender + 'edit', {campground: matchedItem})
   });
 });
 
 //Campground Update
-router.put('/:id', checkCampgroundOwnership, function (req, res){
+router.put('/:campgroundId', checkCampgroundOwnership, function (req, res){
   req.body.campground.description = req.sanitize(req.body.campground.description)   //sanitize any inputs from 'new.ejs' that use <%-...%> in show.ejs or elsewhere
-  Campground.findByIdAndUpdate(req.params.id, req.body.campground, function (err, updatedItem) {
+  Campground.findByIdAndUpdate(req.params.campgroundId, req.body.campground, function (err, updatedItem) {
     if (err) {
-      console.log("something went wrong updating " + req.params.id);
+      console.log("something went wrong updating " + req.params.campgroundId);
       res.redirect('/');
     }
     else {
-      res.redirect(req.params.id)
+      res.redirect(req.params.campgroundId);  
     }
   });
 });
@@ -118,7 +128,7 @@ function isLoggedIn (req, res, next){
 
 function checkCampgroundOwnership(req, res, next){
   if (req.isAuthenticated()){
-    Campground.findById(req.params.id, function (err, matchedItem) {
+    Campground.findById(req.params.campgroundId, function (err, matchedItem) {
       if (err) {
         //if error finding
         console.log("something went wrong finding campground");

@@ -53,33 +53,12 @@ router.post('/register', (req,res) =>{
             return res.render('register');
         }
         else {
-            console.log("else start");
             passport.authenticate('local')(req, res, function(){		//'local' is the passport authentication strategy
             //Do something when authenticated
-            console.log(user._id);              
             res.redirect('/campgrounds');
             });
         }
     });
-    //TODO: how do you pass more than username into registered user? 
-    // const userId = User.find({username: req.body.username});
-    // User.findByIdAndUpdate(userId, function (err, foundItem) {
-    //   if (err){
-    //     console.log("error");
-    //     console.log(err);
-    //   }
-    //   else {
-    //     console.log("embeded else and user info: " + userInfo);
-    //     for (const key in req.body.userInfo) {
-    //       if (object.hasOwnProperty(key)) {
-    //         const value = object[key];
-    //         foundItem.key = value;
-    //       }
-    //     }
-    //     console.log(`foundItem: ${foundItem}`);
-    //     foundItem.save();
-    //   }
-    // });
 });
   
 router.get('*', function(req, res) {

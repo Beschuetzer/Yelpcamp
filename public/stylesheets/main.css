@@ -87,12 +87,20 @@ hr {
   grid-template: 
           "author date" auto     /*here var(..) specifies the length of this row */
           "comment comment" 1fr                       
-          / 1fr 1fr;      /*the '/...' line represents the length of the corresponding column */
+          /auto 1fr;      /*the '/...' line represents the length of the corresponding column */
+}
+
+.edit{
+  grid-area: author;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
 }
 
 .author {
   grid-area: author;
   text-align: left;
+  margin-right: var(--default-margin-size);
 }
 
 .commentText {
@@ -185,6 +193,14 @@ hr {
   color: rgba(0,0,0,.8);
 }
 
+.scaleDelete:hover{
+  transform: scale(1.4);
+}
+
+.scaleEdit:hover{
+  transform: scale(1.25);
+}
+
 #showMain{
   background: black;
   padding-top: 15px;
@@ -201,6 +217,14 @@ hr {
 #showImg{
   height: auto;
   width: 100%;
+}
+#deleteComment{
+  display: inline;
+  outline: none;
+  border: none;
+  color: #dc3545;
+  background: var(--bg-comments);
+  margin-left: calc(var(--default-margin-size)/2);
 }
 
 #commentButton{
