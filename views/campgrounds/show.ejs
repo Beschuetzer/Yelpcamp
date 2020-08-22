@@ -38,9 +38,13 @@
           <a id="commentButton" class="btn btn-md btn-outline-success" href="/campgrounds/<%= campground._id %>/comments/new">Leave a Review</a>
         </div>
       <hr class="m-0 styleHRTop">
-
+      <% let i = 0; %>
       <% campground.comments.forEach((comment) => { %>
-        <hr class="m-0 styleHRComments">
+        <% console.log(i) %>
+        <% if (i > 0) {%>
+          <hr class="m-0 styleHRComments">
+        <% } %>
+        <% i++; %>
         <div class="comment">
           <div class="edit">
               <span class="author mt-3 ml-0 mb-0"><strong><%= comment.author.username %></strong></span> 
@@ -51,7 +55,7 @@
               </form>
           <% } %>
             </div>
-          <span class="dateCreated mt-3"><em>10 days ago</em></span>
+          <span class="dateCreated mt-3"><em><%= comment.date.toLocaleDateString() %> at <%= comment.date.toLocaleTimeString() %></em></span>
           <p class="commentText mb-3"><%= comment.text %></p>
           
         </div>

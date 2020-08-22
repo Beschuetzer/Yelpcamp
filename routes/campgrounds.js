@@ -1,10 +1,10 @@
 //routes related to campgrounds
 const express = require('express'),
       router = express.Router(),
+      middleware = require('../middleware/index'),
       Campground = require('../models/campground'),
       campgroundsRender = 'campgrounds/',
       Comment = require('../models/comment');
-
 //Campground Index
 router.get('/', function(req, res){
   Campground.find({}, (err, returnedItem) => {
@@ -18,13 +18,13 @@ router.get('/', function(req, res){
 });
 
 //Campground New
-router.get('/new', isLoggedIn, (req,res) => {
+router.get('/new', middleware.isLoggedIn, (req,res) => {
     //New
     res.render(campgroundsRender + 'new')
   });
 
 //Campground Create
-router.post('/',  isLoggedIn, (req,res) =>{
+router.post('/',  middleware.isLoggedIn, (req,res) =>{
   const name = req.body.name,
         image = req.body.image,
         alt = "A Beautiful Campground Photo Taken by a User";
@@ -75,7 +75,7 @@ router.get('/:campgroundId', (req, res) =>{
 });
 
 //Campground Delete
-router.delete('/:campgroundId', checkCampgroundOwnership, function (req,res){
+router.delete('/:campgroundId', middleware.checkCampgroundOwnership, function (req,res){
   Campground.findByIdAndDelete(req.params.campgroundId, function(err, deletedCampground){
     if (err){
       console.log(err);
@@ -97,14 +97,14 @@ router.delete('/:campgroundId', checkCampgroundOwnership, function (req,res){
 });
 
 //Campground Edit
-router.get('/:campgroundId/edit', checkCampgroundOwnership, function (req, res){
+router.get('/:campgroundId/edit', middleware.checkCampgroundOwnership, function (req, res){
   Campground.findById(req.params.campgroundId, function(err, matchedItem) {
     res.render(campgroundsRender + 'edit', {campground: matchedItem})
   });
 });
 
 //Campground Update
-router.put('/:campgroundId', checkCampgroundOwnership, function (req, res){
+router.put('/:campgroundId', middleware.checkCampgroundOwnership, function (req, res){
   req.body.campground.description = req.sanitize(req.body.campground.description)   //sanitize any inputs from 'new.ejs' that use <%-...%> in show.ejs or elsewhere
   Campground.findByIdAndUpdate(req.params.campgroundId, req.body.campground, function (err, updatedItem) {
     if (err) {
@@ -118,34 +118,3 @@ router.put('/:campgroundId', checkCampgroundOwnership, function (req, res){
 });
 
 module.exports = router;
-
-function isLoggedIn (req, res, next){
-  if (req.isAuthenticated()){
-    return next();
-  }
-  res.redirect('/login');
-}
-
-function checkCampgroundOwnership(req, res, next){
-  if (req.isAuthenticated()){
-    Campground.findById(req.params.campgroundId, function (err, matchedItem) {
-      if (err) {
-        //if error finding
-        console.log("something went wrong finding campground");
-        res.redirect('back');
-      }
-      else {
-        if (req.user._id.equals(matchedItem.author.id)){
-          next();
-        }
-        else {
-          //if not authorized
-          res.redirect('back');
-        }
-      }
-    });
-  } else {
-    //if not logged in
-    res.redirect('back');
-  }
-}
