@@ -40,16 +40,21 @@
           </div>
         </div>
       </nav>
-      <% console.log(!!errorMessage[0]) %>
-      <% if (errorMessage[0]) { %>
-        <div class="alert text-center alert-warning">
-          <h3><%= errorMessage %></h3>
+
+      <% if (errorMessage && errorMessage[0]) { %>
+        <div class="container px-3">
+          <div class="alert text-center alert-danger">
+            <h3><%= errorMessage %></h3>
+          </div>
         </div>
-      <% } else if (successMessage[0]) {%>
-        <div class="alert text-center alert-success">
-          <h3><%= successMessage %></h3>
+        <% } else if (successMessage && successMessage[0]) {%>
+        <div class="container px-3">
+          <div class="alert text-center alert-success">
+            <h3><%= successMessage %></h3>
+          </div>
         </div>
-      <% } %>
+        <% } %>
+
       
 
       

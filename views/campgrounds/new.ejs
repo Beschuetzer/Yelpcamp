@@ -1,16 +1,22 @@
 <%- include("../partials/header") %>
 
-<div class="container text-center mt-5">
-  <div class="formContainer">
-    <h1 class="title">Create a New Campground</h1>
-    <form action="/campgrounds" method="post" class="text-center">
+<div class="container text-center">
+  <div class="container px-0">
+    <% if (errorMessage[0] || successMessage[0]) { %>
+      <div class="jumbotron mb-0 mt-0">
+    <% } else { %>
+      <div class="jumbotron mb-0">
+    <% } %>
+      <h1 class="">Create Campground</h1>
+    </div>
+    <form action="/campgrounds" method="post" class="formContainer textboxes text-center pt-0">
       <label for="name" class="newCampgroundLabel">Campground Name:</label>
       <input type="text"class="form-control" name="name" id="name" class="" placeholder="Enter a Campground Name">
       <label for="image" class="newCampgroundLabel">Image Url of Campsite:</label>
       <input type="text"class="form-control" name="image" id="image" class="form-control" placeholder="URL to an Image of the Campsite">
       <label for="image" class="newCampgroundLabel">Description of Campsite:</label>
       <textarea required rows="10" placeholder="Enter a Description of the Campsite" class="form-control" name="description"></textarea>
-      <button class="form-control btn btn-outline-success btn-sm" type="submit">Submit</button>
+      <button class="form-control btn btn-outline-success btn-sm mb-0" type="submit">Submit</button>
     </form>
   </div>
 </div>

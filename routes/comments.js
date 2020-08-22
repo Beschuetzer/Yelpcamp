@@ -64,6 +64,7 @@ router.get("/:commentId/edit", middleware.checkCommentOwnership, function (req, 
           res.redirect('back');
         }
         else {
+          req.flash('success', 'Comment Added Successfully!')
           res.render('./comments/edit', {comment: matchedComment, campground: matchedCampground});
         }
       });
@@ -75,12 +76,14 @@ router.get("/:commentId/edit", middleware.checkCommentOwnership, function (req, 
 router.put('/:commentId/', middleware.checkCommentOwnership, function(req, res) {
   Comment.findById(req.params.commentId, function (err, matchedComment) {
     if (err){
+      req.flash('error', `Error finding comment ${commentId}`)
       console.log(err);
     }
     else {
       matchedComment.text = req.body.comment.text;
       matchedComment.date = Date.now();
       matchedComment.save();
+      req.flash('success', 'Comment Added Successfully!')
       res.redirect(`/campgrounds/${req.params.campgroundId}`);
     }
   });

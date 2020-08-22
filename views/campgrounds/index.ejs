@@ -2,8 +2,12 @@
 
 
 
-<div id="topContainer" class="container text-center">
-  <header class="jumbotron mb-0">
+<div class="container text-center">
+  <% if (errorMessage[0] || successMessage[0]) { %>
+    <header class="jumbotron mb-0 mt-0">
+  <% } else {%>
+    <header class="jumbotron mb-0">
+  <% } %>
     <div class="container">
       <h1>Welcome to YelpCamp!</h1>
       <p>View Our Hand-Picked Campgrounds from all over the Planet.</p>
@@ -11,12 +15,12 @@
         <a href="/campgrounds/new" class="btn btn-primary btn-lg">Add a Campground</a>
       </p>
     </div>
-  </header class="jumbotron text-align-center">
+  </header>
 
   <div class="row justify-content-center">
     <% campgrounds.forEach((campground) => { %>
       <div class="campground col-md-6 col-lg-4 col-xl-3">
-        <div class="card w-100 mt-4">
+        <div class="card w-100">
           <div class="card-img-top" style="background: url(<%= campground.image %>);">
           </div>
           <div class="card-body">

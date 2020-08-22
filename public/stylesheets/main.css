@@ -8,7 +8,7 @@
 
 :root {
   --default-font-size: 16px;
-  --default-margin-size: 16px;
+  --default-margin-size: 15px;
   --landing-form-width: 85%;
   --bg-comments:  #e5e5e5;
   --bg-jumbtron: #e9ecef;
@@ -130,10 +130,6 @@ hr {
   margin: 15px auto 0 auto;
 }
 
-.title{
-  margin: calc(var(--default-margin-size)*3.58) auto var(--default-margin-size) auto;
-}
-
 .caption{
   display: flex;
   justify-content: space-between;
@@ -160,6 +156,10 @@ hr {
   justify-content: left;
   vertical-align: middle;
   align-items: center;
+}
+
+.formContainer {
+  width: 400px;
 }
 
 .author {
@@ -202,7 +202,15 @@ hr {
 }
 
 .alert{
-  margin: 40px 0 0 0;
+  margin-top: 55px;
+}
+
+.jumbotron{
+  margin-top: 55px;
+}
+
+.card {
+  margin-top: var(--default-margin-size);
 }
 
 #showMain{
@@ -212,10 +220,6 @@ hr {
 
 #password{
   margin-bottom: 0px;
-}
-
-#topContainer {
-  margin-top: calc(var(--default-margin-size)*4);
 }
 
 #showImg{
@@ -255,7 +259,8 @@ hr {
     width: 400px;
   }
 }
-@media (max-width: 420px) {
+
+@media (max-width: 464px) {
   h1 {
     font-size: 1.39rem;
   }

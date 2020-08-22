@@ -1,17 +1,18 @@
 <%- include("../partials/header") %>
 
-<div class="container text-center mt-5">
-  <div class="formContainer">
-    <h1>Add New Comment</h1>
-    <h3>'<%=campground.name %>'</h3>
-    <img class="card w-100 mb-3" src="<%= campground.image %>" alt="">
+<div class="container text-center mt-5 mb-0">
+  <div class="jumbotron mb-0 py-3">
+    <h1>Add Comment</h1>
+    <h3><em><strong>'<%=campground.name %>'</strong></em></h3>
+  </div>
+  <div class="formContainer textboxes ">
+    <img class="card w-100 mb-2 mt-0" src="<%= campground.image %>" alt="">
     <div class="text-left">
       <label class="" for="description">Comment:</label>
-
     </div>
     <form action="/campgrounds/<%= campground._id%>/comments" method="post" class="text-center w-100">
       <textarea required rows="10" id="description" placeholder="Thoughts on '<%= campground.name %>'?" class="form-control w-100" name="comment[text]"></textarea>
-      <button class="form-control btn btn-outline-success btn-md" type="submit">Submit</button>
+      <button class="form-control btn btn-outline-success btn-md mb-0" type="submit">Submit</button>
     </form>
   </div>
 </div>

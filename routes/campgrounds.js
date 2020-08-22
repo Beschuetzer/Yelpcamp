@@ -32,10 +32,10 @@ router.post('/',  middleware.isLoggedIn, (req,res) =>{
   description = req.sanitize(description);
 
   //need to validate data before creating new entry
-  const nameValid = name != null & name.trim() !== "" & !name.match(/[<>]/i),
-        imageValid = image != null & image.trim() !== "" & !image.match(/[<>]/i),
-        descriptionValid = description != null & description.trim() !== "",
-        altValid = alt != null & alt.trim() !== "" & !alt.match(/[<>]/i);
+  const nameValid = name != null && name.trim() !== "" && !name.match(/[<>]/i),
+        imageValid = image.match(/\s*http:\/\/.*|\s*www\..*/i),
+        descriptionValid = description != null && description.trim() !== "",
+        altValid = alt != null && alt.trim() !== "" && !alt.match(/[<>]/i);
 
   if (nameValid && imageValid && descriptionValid && altValid){
     const author = 
@@ -50,15 +50,29 @@ router.post('/',  middleware.isLoggedIn, (req,res) =>{
       },
     }, function (err, returnedItem) {
       if (err) {
+        req.flash('error', 'Something went wrong creating Campground :(')
         console.log("something went wrong");
       }
       else {
+        req.flash('success', `'${name}' successfully created!`)
         res.redirect('/campgrounds');
       }
     });
   }
   else {
-    res.redirect('/new')
+    if (!nameValid) {
+      req.flash('error', `'${name}' is not a valid Campground Name!`)
+    }
+    else if (!imageValid) {
+      req.flash('error', `'${image}' is not a Valid Image Url!`)
+    }
+    else if (!descriptionValid) {
+      req.flash('error', `'${description}' is not a Valid Description!`)
+    }
+    else if (!altValid) {
+      req.flash('error', `'${alt}' is not a Valid Image Alternative Description!`)
+    }
+    res.redirect('back')
   }
 });
 
@@ -105,7 +119,7 @@ router.get('/:campgroundId/edit', middleware.checkCampgroundOwnership, function 
 
 //Campground Update
 router.put('/:campgroundId', middleware.checkCampgroundOwnership, function (req, res){
-  req.body.campground.description = req.sanitize(req.body.campground.description)   //sanitize any inputs from 'new.ejs' that use <%-...%> in show.ejs or elsewhere
+  req.body.campgrounameription = req.sanitize(req.body.campground.description)   //sanitize any inputs from 'new.ejs' that use <%-...%> in show.ejs or elsewhere
   Campground.findByIdAndUpdate(req.params.campgroundId, req.body.campground, function (err, updatedItem) {
     if (err) {
       console.log("something went wrong updating " + req.params.campgroundId);
