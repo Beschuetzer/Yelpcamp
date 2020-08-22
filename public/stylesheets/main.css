@@ -201,6 +201,10 @@ hr {
   transform: scale(1.25);
 }
 
+.alert{
+  margin: 40px 0 0 0;
+}
+
 #showMain{
   background: black;
   padding-top: 15px;

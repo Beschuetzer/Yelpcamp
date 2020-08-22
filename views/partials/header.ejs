@@ -40,6 +40,18 @@
           </div>
         </div>
       </nav>
+      <% console.log(!!errorMessage[0]) %>
+      <% if (errorMessage[0]) { %>
+        <div class="alert text-center alert-warning">
+          <h3><%= errorMessage %></h3>
+        </div>
+      <% } else if (successMessage[0]) {%>
+        <div class="alert text-center alert-success">
+          <h3><%= successMessage %></h3>
+        </div>
+      <% } %>
+      
+
       
 
     

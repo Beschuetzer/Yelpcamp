@@ -11,6 +11,7 @@ middlewareObj.checkCampgroundOwnership = function (req, res, next){
         if (err) {
           //if error finding
           console.log("something went wrong finding campground");
+          req.flash("error", `Error finding campground '${req.params.campgroundId}' in database...`)
           res.redirect('back');
         }
         else {
@@ -19,13 +20,15 @@ middlewareObj.checkCampgroundOwnership = function (req, res, next){
           }
           else {
             //if not authorized
+            req.flash("error", `You are not authorized to do that!`)
             res.redirect('back');
           }
         }
       });
     } else {
-      //if not logged in
-      res.redirect('back');
+        //if not logged in
+        req.flash("error", "Please Login First!");
+        res.redirect('back');
     }
   }
 
@@ -33,6 +36,7 @@ middlewareObj.isLoggedIn = function (req, res, next){
     if (req.isAuthenticated()){
       return next();
     }
+    req.flash("error", "Please Login First!");
     res.redirect('/login');
   }
 
@@ -42,6 +46,7 @@ middlewareObj.checkCommentOwnership = function (req, res, next){
         if (err) {
           //if error finding ID
           console.log("something went wrong finding campground");
+          req.flash("error", `Error finding comment '${req.params.commentId}' in database...`)
           res.redirect('back');
         }
         else {
@@ -50,13 +55,15 @@ middlewareObj.checkCommentOwnership = function (req, res, next){
           }
           else {
             //if not authorized
+            req.flash("error", `You are not authorized to do that!`)
             res.redirect('back');
           }
         }
       });
     } else {
       //if not logged in
-      res.redirect('back');
+        req.flash("error", "Please Login First!");
+        res.redirect('back');
     }
   }
 

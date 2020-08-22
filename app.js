@@ -1,7 +1,6 @@
 //#region Setting up Packages and Mongoose
 const express = require('express'),
       app = express(),
-      axios = require('axios'),
       bodyParser = require('body-parser'),
       mongoose = require('mongoose'),
       expressSanitizer = require('express-sanitizer'),
@@ -15,7 +14,9 @@ const express = require('express'),
       seedDB = require('./helpers/seed'),
       indexRoutes = require('./routes/index'),
       commentRoutes = require('./routes/comments'),
+      flash = require('connect-flash'),
       campgroundRoutes = require('./routes/campgrounds');
+      
 
 mongoose.connect('mongodb://localhost:27017/' + dbName, {
   useNewUrlParser: true,
@@ -27,6 +28,7 @@ mongoose.connect('mongodb://localhost:27017/' + dbName, {
 })
 .catch(error => console.log(error.message));
   seedDB();
+
 //#endregion
 //#region Configuring Express
 //telling express to serve files in 'public'
@@ -34,6 +36,7 @@ app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
 app.use(expressSanitizer());
+app.use(flash());
 
 //below used only for authentication
 app.use(require('express-session')({
@@ -50,6 +53,8 @@ passport.deserializeUser(User.deserializeUser());       //decodes User class/mod
 //Storing req.user (where the session user info is stored) in the local scope of all routes (all templates can access); currentUser is 'undefined' if not logged in
 app.use(function (req, res, next){
   res.locals.currentUser = req.user;
+  res.locals.errorMessage = req.flash('error');
+  res.locals.successMessage = req.flash('success');
   next();
 });
 
