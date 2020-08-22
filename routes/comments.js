@@ -8,7 +8,7 @@ const express = require('express'),
       commentsRoute = '/comments';
 
 //Comments New
-router.get('/new', middleware.isLoggedIn, function(req,res){
+router.get('/new', middleware.isLoggedIn, middleware.checkWhetherHasCommentAlready, function(req,res){
   Campground.findById(req.params.campgroundId, (err, foundItem) =>{
     if (err){
       console.log(err);
@@ -41,7 +41,8 @@ router.post('/', middleware.isLoggedIn, function (req,res) {
                 console.log(err);
                 }
                 else {
-                res.redirect(campgroundsRoute + '/' + req.params.campgroundId)
+                  req.flash('success', "Successfully Added Comment")
+                  res.redirect(campgroundsRoute + '/' + req.params.campgroundId)
                 }
             });      
         }
@@ -61,10 +62,12 @@ router.get("/:commentId/edit", middleware.checkCommentOwnership, function (req, 
         if (err) {
           //if error finding
           console.log("something went wrong finding comment");
+          req.flash('error', 'Error Finding Comment!')
           res.redirect('back');
         }
         else {
-          req.flash('success', 'Comment Added Successfully!')
+          req.flash('success', 'Comment Updated Successfully!')
+          console.log("edit");
           res.render('./comments/edit', {comment: matchedComment, campground: matchedCampground});
         }
       });
@@ -83,7 +86,7 @@ router.put('/:commentId/', middleware.checkCommentOwnership, function(req, res) 
       matchedComment.text = req.body.comment.text;
       matchedComment.date = Date.now();
       matchedComment.save();
-      req.flash('success', 'Comment Added Successfully!')
+      req.flash('success', 'Comment Updated Successfully!')
       res.redirect(`/campgrounds/${req.params.campgroundId}`);
     }
   });

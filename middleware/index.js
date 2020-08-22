@@ -67,4 +67,40 @@ middlewareObj.checkCommentOwnership = function (req, res, next){
     }
   }
 
+//TODO: need middleware to only allow adding one comment
+middlewareObj.checkWhetherHasCommentAlready = function (req, res, next) {
+  Campground.findById(req.params.campgroundId).populate("comments").exec(function (err, foundCampground) {
+    if (err){
+      console.log(err);
+    }
+    else {
+      // let hasCommentAlready = false;
+      // let j = 0;
+      // while (foundCampground.comments[j]) {
+        // Comment.findById(foundCampground.comments[0], function (err, foundComment) {
+        //   if (err){
+        //     console.log(err);
+        //   }
+        //   else {
+        //     console.log(foundComment);
+            // j++;
+            // if (req.user._id && req.user._id.equals(foundComment.author.id)) {
+            //   hasCommentAlready = true;
+            //   console.log("comment already");
+            //   req.flash('error', 'You already have a comment.');
+            //   res.redirect('back');
+            // }
+            // else {
+            //   console.log("next");
+            //   next();
+            // }
+        //   }
+        // });
+      // }
+      //TODO: how do you do a for loop in mongoose?
+      next();
+    }
+  });
+}
+
 module.exports = middlewareObj;

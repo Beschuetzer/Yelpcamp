@@ -35,7 +35,16 @@
       <div class="card mt-3">
         <div id="commentButtonDiv">
           <div class="hidden"></div>
-          <a id="commentButton" class="btn btn-md btn-outline-success" href="/campgrounds/<%= campground._id %>/comments/new">Leave a Review</a>
+          <% let j = 0; %>
+          <% while (campground.comments[j]) { %>
+            <% if (currentUser && currentUser._id.equals(campground.comments[j].author.id)) { %>
+              <a id="commentButton" class="btn btn-md btn-outline-success" href="/campgrounds/<%= campground._id %>/comments/<%= campground.comments[j]._id %>/edit">Leave a Review</a>
+              <% break; %>
+            <% } else { %>
+              <a id="commentButton" class="btn btn-md btn-outline-success" href="/campgrounds/<%= campground._id %>/comments/new">Leave a Review</a>
+            <% } %>
+            <% j++; %>
+          <% } %>
         </div>
       <hr class="m-0 styleHRTop">
       <% let i = 0; %>
