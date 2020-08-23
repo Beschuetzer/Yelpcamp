@@ -1,6 +1,9 @@
 <%- include("../partials/header") %>
-
-<div class="container-fluid text-center title">
+<% if (errorMessage[0] || successMessage[0]) { %>
+  <div class="container-fluid text-center title">
+    <% } else { %>
+  <div class="container-fluid text-center title marginTop">
+<% } %>
   <div class="row">
     <div class="col-md-3">
       <p class="lead">YelpCamp</p>
@@ -11,7 +14,7 @@
       </div>
     </div>
     <div class="col-md-9">
-      <div class="card bg-light">
+      <div class="card bg-light mt-0">
         <img class="img-fluid" id="showImg" src="<%= campground.image %>"></img>
         <div class="caption px-3 mt-4">
           <a href="#"><h4 class="name mb-0"><%= campground.name %></h4></a>
@@ -22,7 +25,6 @@
           <div class="hidden"></div>
         </div>
         <p class="lead mt-3 w-100 text-justify px-3"><%- campground.description %></p>
-        <% console.log(campground.author.id) %>
         <% if (currentUser && currentUser._id.equals(campground.author.id)) { %>
         <div class="card-body buttons pt-1">
           <a class="btn btn-md btn-outline-primary buttonWidth" href="/campgrounds/<%= campground._id %>/edit" type="submit">Edit</a>
@@ -35,21 +37,22 @@
       <div class="card mt-3">
         <div id="commentButtonDiv">
           <div class="hidden"></div>
-          <% let j = 0; %>
+          <% let j = 0, hasCommentAlready = false; %>
           <% while (campground.comments[j]) { %>
             <% if (currentUser && currentUser._id.equals(campground.comments[j].author.id)) { %>
-              <a id="commentButton" class="btn btn-md btn-outline-success" href="/campgrounds/<%= campground._id %>/comments/<%= campground.comments[j]._id %>/edit">Leave a Review</a>
+              <a id="commentButton" class="btn btn-md btn-outline-success" href="/campgrounds/<%= campground._id %>/comments/<%= campground.comments[j]._id %>/edit">Change Review</a>
+              <% hasCommentAlready = true; %>
               <% break; %>
-            <% } else { %>
-              <a id="commentButton" class="btn btn-md btn-outline-success" href="/campgrounds/<%= campground._id %>/comments/new">Leave a Review</a>
             <% } %>
             <% j++; %>
+          <% } %>
+          <% if (!hasCommentAlready) { %>
+            <a id="commentButton" class="btn btn-md btn-outline-success" href="/campgrounds/<%= campground._id %>/comments/new">Leave a Review</a>
           <% } %>
         </div>
       <hr class="m-0 styleHRTop">
       <% let i = 0; %>
       <% campground.comments.forEach((comment) => { %>
-        <% console.log(i) %>
         <% if (i > 0) {%>
           <hr class="m-0 styleHRComments">
         <% } %>

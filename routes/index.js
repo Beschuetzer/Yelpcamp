@@ -6,7 +6,7 @@ const express = require('express'),
       
 function isLoggedIn (req, res, next){
     if (req.isAuthenticated()){
-      return next();
+      next();
     }
     res.redirect('/login');
 }
@@ -51,7 +51,7 @@ router.post('/register', (req,res) =>{
     User.register(new User({username: req.body.username}), req.body.password, function(err, user){
         if (err){
             console.log(err);
-            return res.render('register');
+            res.render('register');
         }
         else {
             passport.authenticate('local')(req, res, function(){		//'local' is the passport authentication strategy

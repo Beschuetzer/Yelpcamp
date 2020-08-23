@@ -1,106 +1,101 @@
-const Campground = require('../models/campground');
-const Comment = require('../models/comment');
+const Campground = require("../models/campground");
+const Comment = require("../models/comment");
+const User = require("../models/user");
 
 //all middleware goes here
-const middlewareObj = {
+const middlewareObj = {};
+
+middlewareObj.checkCampgroundOwnership = function (req, res, next) {
+  if (req.isAuthenticated()) {
+    Campground.findById(req.params.campgroundId, function (err, matchedItem) {
+      if (err) {
+        //if error finding
+        console.log("something went wrong finding campground");
+        req.flash(
+          "error",
+          `Error finding campground '${req.params.campgroundId}' in database...`
+        );
+        res.redirect("back");
+      } else {
+        if (req.user._id.equals(matchedItem.author.id)) {
+          next();
+        } else {
+          //if not authorized
+          req.flash("error", `You are not authorized to do that!`);
+          res.redirect("back");
+        }
+      }
+    });
+  } else {
+    //if not logged in
+    req.flash("error", "Please Login First!");
+    res.redirect("back");
+  }
 };
 
-middlewareObj.checkCampgroundOwnership = function (req, res, next){
-    if (req.isAuthenticated()){
-      Campground.findById(req.params.campgroundId, function (err, matchedItem) {
-        if (err) {
-          //if error finding
-          console.log("something went wrong finding campground");
-          req.flash("error", `Error finding campground '${req.params.campgroundId}' in database...`)
-          res.redirect('back');
-        }
-        else {
-          if (req.user._id.equals(matchedItem.author.id)){
-            next();
-          }
-          else {
-            //if not authorized
-            req.flash("error", `You are not authorized to do that!`)
-            res.redirect('back');
-          }
-        }
-      });
-    } else {
-        //if not logged in
-        req.flash("error", "Please Login First!");
-        res.redirect('back');
-    }
+middlewareObj.isLoggedIn = function (req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
   }
+  req.flash("error", "Please Login First!");
+  res.redirect("/login");
+};
 
-middlewareObj.isLoggedIn = function (req, res, next){
-    if (req.isAuthenticated()){
-      return next();
-    }
+middlewareObj.checkCommentOwnership = function (req, res, next) {
+  if (req.isAuthenticated()) {
+    Comment.findById(req.params.commentId, function (err, matchedComment) {
+      if (err) {
+        //if error finding ID
+        console.log("something went wrong finding campground");
+        req.flash(
+          "error",
+          `Error finding comment '${req.params.commentId}' in database...`
+        );
+        res.redirect("back");
+      } else {
+        if (req.user._id.equals(matchedComment.author.id)) {
+          next();
+        } else {
+          //if not authorized
+          req.flash("error", `You are not authorized to do that!`);
+          res.redirect("back");
+        }
+      }
+    });
+  } else {
+    //if not logged in
     req.flash("error", "Please Login First!");
-    res.redirect('/login');
+    res.redirect("back");
   }
+};
 
-middlewareObj.checkCommentOwnership = function (req, res, next){
-    if (req.isAuthenticated()){
-      Comment.findById(req.params.commentId, function (err, matchedComment) {
-        if (err) {
-          //if error finding ID
-          console.log("something went wrong finding campground");
-          req.flash("error", `Error finding comment '${req.params.commentId}' in database...`)
-          res.redirect('back');
-        }
-        else {
-          if (req.user._id.equals(matchedComment.author.id)){
-            next();
-          }
-          else {
-            //if not authorized
-            req.flash("error", `You are not authorized to do that!`)
-            res.redirect('back');
-          }
-        }
-      });
-    } else {
-      //if not logged in
-        req.flash("error", "Please Login First!");
-        res.redirect('back');
-    }
-  }
-
-//TODO: need middleware to only allow adding one comment
 middlewareObj.checkWhetherHasCommentAlready = function (req, res, next) {
-  Campground.findById(req.params.campgroundId).populate("comments").exec(function (err, foundCampground) {
-    if (err){
-      console.log(err);
-    }
-    else {
-      // let hasCommentAlready = false;
-      // let j = 0;
-      // while (foundCampground.comments[j]) {
-        // Comment.findById(foundCampground.comments[0], function (err, foundComment) {
-        //   if (err){
-        //     console.log(err);
-        //   }
-        //   else {
-        //     console.log(foundComment);
-            // j++;
-            // if (req.user._id && req.user._id.equals(foundComment.author.id)) {
-            //   hasCommentAlready = true;
-            //   console.log("comment already");
-            //   req.flash('error', 'You already have a comment.');
-            //   res.redirect('back');
-            // }
-            // else {
-            //   console.log("next");
-            //   next();
-            // }
-        //   }
-        // });
-      // }
-      //TODO: how do you do a for loop in mongoose?
-      next();
-    }
-  });
-}
+  Campground.findById(req.params.campgroundId)
+    .populate("comments")
+    .exec(function (err, campground) {
+      if (err) {
+        console.log(err);
+      } else {
+        let ownsComment = false;
+        let j = 0;
+        while (campground.comments[j]) {
+          if (campground.comments[j].author.id.equals(req.user._id)) {
+            ownsComment = true;
+            break;
+          }
+          j++;
+        }
+        if (!ownsComment) {
+          next();
+        } else {
+          req.flash(
+            "error",
+            `You already have a comment for ${campground.name}!`
+          );
+          res.redirect("back");
+        }
+      }
+    });
+};
 
 module.exports = middlewareObj;

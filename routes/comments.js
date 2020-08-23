@@ -4,6 +4,7 @@ const express = require('express'),
       middleware = require('../middleware/index'),
       Campground = require('../models/campground'),
       Comment = require('../models/comment'),
+      User = require('../models/user'),
       campgroundsRoute = '/campgrounds',
       commentsRoute = '/comments';
 
@@ -26,25 +27,45 @@ router.post('/', middleware.isLoggedIn, function (req,res) {
       console.log(err);
     }
     else {
-      Campground.findById(req.params.campgroundId, function (err, campground) {
+      User.findById(req.user._id, function(err, foundUser) {
         if (err){
           console.log(err);
         }
         else {
-            //add username and id to comment
-            comment.author.id = req.user._id;
-            comment.author.username = req.user.username;
-            comment.save();
-            campground.comments.push(comment);
-            campground.save(function (err) {
-                if (err){
-                console.log(err);
-                }
-                else {
-                  req.flash('success', "Successfully Added Comment")
-                  res.redirect(campgroundsRoute + '/' + req.params.campgroundId)
-                }
-            });      
+          // console.log("comments here");
+          // console.log(foundUser);
+          // foundUser.comments.forEach(userComment => {
+          //   console.log(`comment: ${userComment}`);
+          // });
+          Campground.findById(req.params.campgroundId, function (err, campground) {
+            if (err){
+              console.log(err);
+            }
+            else {
+                //add username and id to comment
+                comment.author.id = req.user._id;
+                comment.author.username = req.user.username;
+                comment.save();
+                campground.comments.push(comment);
+                foundUser.comments.push(comment);
+                foundUser.save((err) => {
+                  if (err){
+                    console.log(err);
+                  }
+                  else {
+                    campground.save(function (err) {
+                      if (err){
+                      console.log(err);
+                      }
+                      else {
+                        req.flash('success', "Successfully Added Comment")
+                        res.redirect(campgroundsRoute + '/' + req.params.campgroundId)
+                      }
+                  });     
+                  }
+                });
+            }
+          });
         }
       });
     }
@@ -67,7 +88,6 @@ router.get("/:commentId/edit", middleware.checkCommentOwnership, function (req, 
         }
         else {
           req.flash('success', 'Comment Updated Successfully!')
-          console.log("edit");
           res.render('./comments/edit', {comment: matchedComment, campground: matchedCampground});
         }
       });
@@ -99,7 +119,54 @@ router.delete('/:commentId', middleware.checkCommentOwnership, function(req, res
       console.log(err);
     }
     else {
-      res.redirect(`/campgrounds/${req.params.campgroundId}`);
+      Campground.findById(req.params.campgroundId, (err, campground)=> {
+        if (err){
+          console.log(err);
+        }
+        else {
+          let i = 0;
+          // console.log(`comments: ${campground.comments}`);
+          while (campground.comments[i]) {
+            if (campground.comments[i]._id.equals(deletedComment._id)) {
+              campground.comments.splice(i);
+              campground.save((err, savedcampground) => {
+                if (err){
+                  console.log(err);
+                }
+                else {  
+                  User.findById(req.user._id, (err, user) => {
+                    if (err){
+                      console.log(err);
+                    }
+                    else {
+                      let i = 0;
+                      // console.log(`user comments: ${user.comments}`);
+                      while (user.comments[i]) {
+                        if (user.comments[i]._id.equals(deletedComment._id)) {
+                          user.comments.splice(i);
+                          user.save((err, saveduser) => {
+                            if (err){
+                              console.log(err);
+                            }
+                            else {
+                              res.redirect(`/campgrounds/${req.params.campgroundId}`);
+                            }
+                          });
+                          break;
+                        }
+                        i++;
+                      }
+                    }
+                  }); 
+                }
+              });
+              break;
+            }
+            i++;
+          }; 
+                  
+        }
+      });
     }
   });
 });

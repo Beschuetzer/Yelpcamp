@@ -95,7 +95,6 @@ router.delete('/:campgroundId', middleware.checkCampgroundOwnership, function (r
       console.log(err);
     }
     else {
-      console.log(deletedCampground);
       deletedCampground.comments.forEach(comment => {
         Comment.findByIdAndDelete(comment, function (err, deletedComment) {
           if (err){
