@@ -13,6 +13,7 @@ router.get('/new', middleware.isLoggedIn, middleware.checkWhetherHasCommentAlrea
   Campground.findById(req.params.campgroundId, (err, foundItem) =>{
     if (err){
       console.log(err);
+      req.flash('error', `Error finding campground ${req.params.campgroundId}`);
     }
     else {
       res.render('.' + commentsRoute + "/new", {campground: foundItem});
@@ -25,45 +26,53 @@ router.post('/', middleware.isLoggedIn, function (req,res) {
   Comment.create({text: req.body.comment.text}, function(err, comment) {
     if (err){
       console.log(err);
+      req.flash('error', `Error creating comment`);
     }
     else {
       User.findById(req.user._id, function(err, foundUser) {
         if (err){
           console.log(err);
+          req.flash('error', `Error getting user ${req.user._id} in database`);
         }
         else {
-          // console.log("comments here");
-          // console.log(foundUser);
-          // foundUser.comments.forEach(userComment => {
-          //   console.log(`comment: ${userComment}`);
-          // });
           Campground.findById(req.params.campgroundId, function (err, campground) {
             if (err){
               console.log(err);
+              req.flash('error', `Error getting campground ${req.params.campgroundId}`);
             }
             else {
                 //add username and id to comment
                 comment.author.id = req.user._id;
                 comment.author.username = req.user.username;
-                comment.save();
-                campground.comments.push(comment);
-                foundUser.comments.push(comment);
-                foundUser.save((err) => {
+                comment.save((err) => {
                   if (err){
                     console.log(err);
+                    req.flash('error', `Error saving comment ${comment._id}`);
                   }
                   else {
-                    campground.save(function (err) {
+                    campground.comments.push(comment);
+                    foundUser.comments.push(comment);
+                    foundUser.save((err) => {
                       if (err){
-                      console.log(err);
+                        req.flash('error', `Error saving user ${foundUser._id}`);
+                        console.log(err);
                       }
                       else {
-                        req.flash('success', "Successfully Added Comment")
-                        res.redirect(campgroundsRoute + '/' + req.params.campgroundId)
+                        campground.save(function (err) {
+                          if (err){
+                            req.flash('error', `Error saving campground ${campground._id}`);
+                            console.log(err);
+                          }
+                          else {
+                            req.flash('success', "Successfully Added Comment")
+                            res.redirect(campgroundsRoute + '/' + req.params.campgroundId)
+                          }
+                      });     
                       }
-                  });     
+                    });
                   }
                 });
+                
             }
           });
         }
@@ -76,12 +85,12 @@ router.post('/', middleware.isLoggedIn, function (req,res) {
 router.get("/:commentId/edit", middleware.checkCommentOwnership, function (req, res) {
   Campground.findById(req.params.campgroundId, function (err, matchedCampground) {
     if (err){
+      req.flash('error', `Error finding campground ${req.params.campgroundId}`);
       console.log(err);
     }
     else {
       Comment.findById(req.params.commentId, function (err, matchedComment) {
         if (err) {
-          //if error finding
           console.log("something went wrong finding comment");
           req.flash('error', 'Error Finding Comment!')
           res.redirect('back');
@@ -117,11 +126,13 @@ router.delete('/:commentId', middleware.checkCommentOwnership, function(req, res
   Comment.findByIdAndDelete(req.params.commentId, function(err, deletedComment){
     if (err){
       console.log(err);
+      req.flash('error', `Error finding comment ${req.params.commentId}`);
     }
     else {
       Campground.findById(req.params.campgroundId, (err, campground)=> {
         if (err){
           console.log(err);
+          req.flash('error', `Error finding campground ${req.params.campgroundId}`);
         }
         else {
           let i = 0;
@@ -132,11 +143,13 @@ router.delete('/:commentId', middleware.checkCommentOwnership, function(req, res
               campground.save((err, savedcampground) => {
                 if (err){
                   console.log(err);
+                  req.flash('error', `Error saving campground ${req.params.campgroundId}`);
                 }
                 else {  
                   User.findById(req.user._id, (err, user) => {
                     if (err){
                       console.log(err);
+                      req.flash('error', `Error finding user ${req.user._id}`);
                     }
                     else {
                       let i = 0;
@@ -147,8 +160,10 @@ router.delete('/:commentId', middleware.checkCommentOwnership, function(req, res
                           user.save((err, saveduser) => {
                             if (err){
                               console.log(err);
+                              req.flash('error', `Error saving user ${req.user._id}`);
                             }
                             else {
+                              req.flash('success', `Successfully deleted comment\n'${deletedComment.text.slice(0, 10)}'...`);
                               res.redirect(`/campgrounds/${req.params.campgroundId}`);
                             }
                           });

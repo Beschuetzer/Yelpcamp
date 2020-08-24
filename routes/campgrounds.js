@@ -5,6 +5,7 @@ const express = require('express'),
       Campground = require('../models/campground'),
       campgroundsRender = 'campgrounds/',
       Comment = require('../models/comment');
+
 //Campground Index
 router.get('/', function(req, res){
   Campground.find({}, (err, returnedItem) => {
@@ -81,6 +82,8 @@ router.get('/:campgroundId', (req, res) =>{
   Campground.findById(req.params.campgroundId).populate('comments').exec(function(err,foundItem){
     if (err) {
       console.log("something went wrong show route");
+      req.flash('error', `Something went wrong getting campground ${req.params.campgroundId}`);
+
     }
     else {
       res.render(campgroundsRender + 'show', {campground: foundItem});
@@ -93,14 +96,18 @@ router.delete('/:campgroundId', middleware.checkCampgroundOwnership, function (r
   Campground.findByIdAndDelete(req.params.campgroundId, function(err, deletedCampground){
     if (err){
       console.log(err);
+      req.flash('error', `Something went wrong getting campground ${req.params.campgroundId}`);
+
     }
     else {
       deletedCampground.comments.forEach(comment => {
         Comment.findByIdAndDelete(comment, function (err, deletedComment) {
           if (err){
             console.log(err);
+            req.flash('error', `Something went wrong getting comment ${req.params.commentId}`);
           }
           else {
+            req.flash('success', `Campground '${deletedCampground.name}' and its comments deleted successfully.`);
           }
         });
       });
@@ -112,7 +119,13 @@ router.delete('/:campgroundId', middleware.checkCampgroundOwnership, function (r
 //Campground Edit
 router.get('/:campgroundId/edit', middleware.checkCampgroundOwnership, function (req, res){
   Campground.findById(req.params.campgroundId, function(err, matchedItem) {
-    res.render(campgroundsRender + 'edit', {campground: matchedItem})
+    if (err){
+      console.log(err);
+      req.flash('error', `Something went wrong getting comment ${req.params.commentId}`);
+    }
+    else {
+      res.render(campgroundsRender + 'edit', {campground: matchedItem})
+    }
   });
 });
 
@@ -122,9 +135,11 @@ router.put('/:campgroundId', middleware.checkCampgroundOwnership, function (req,
   Campground.findByIdAndUpdate(req.params.campgroundId, req.body.campground, function (err, updatedItem) {
     if (err) {
       console.log("something went wrong updating " + req.params.campgroundId);
+      req.flash('error', `Something went wrong getting campground object '${req.params.campgroundId}'`);
       res.redirect('/');
     }
     else {
+      req.flash('success', `${updatedItem.name} updated successfully`)
       res.redirect(req.params.campgroundId);  
     }
   });

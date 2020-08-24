@@ -16,3 +16,10 @@ function checkZipCodeLength(e) {
         tb_ZipCode.value = "";
     }
 }
+
+const oldObj = {a: "a"};
+const test = Object.assign({}, oldObj);
+console.log({test});
+test.b = "b";
+console.log({oldObj});
+
