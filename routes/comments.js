@@ -11,9 +11,10 @@ const express = require('express'),
 //Comments New
 router.get('/new', middleware.isLoggedIn, middleware.checkWhetherHasCommentAlready, function(req,res){
   Campground.findById(req.params.campgroundId, (err, foundItem) =>{
-    if (err){
+     if (err || !foundItem){
       console.log(err);
       req.flash('error', `Error finding campground ${req.params.campgroundId}`);
+      res.redirect('back');        
     }
     else {
       res.render('.' + commentsRoute + "/new", {campground: foundItem});
@@ -24,44 +25,50 @@ router.get('/new', middleware.isLoggedIn, middleware.checkWhetherHasCommentAlrea
 //Comment Create
 router.post('/', middleware.isLoggedIn, function (req,res) {
   Comment.create({text: req.body.comment.text}, function(err, comment) {
-    if (err){
+     if (err || !comment){
       console.log(err);
       req.flash('error', `Error creating comment`);
+      res.redirect('back');        
     }
     else {
       User.findById(req.user._id, function(err, foundUser) {
-        if (err){
+         if (err || !foundUser){
           console.log(err);
           req.flash('error', `Error getting user ${req.user._id} in database`);
+          res.redirect('back');        
         }
         else {
           Campground.findById(req.params.campgroundId, function (err, campground) {
-            if (err){
+             if (err || !campground){
               console.log(err);
               req.flash('error', `Error getting campground ${req.params.campgroundId}`);
+              res.redirect('back');        
             }
             else {
                 //add username and id to comment
                 comment.author.id = req.user._id;
                 comment.author.username = req.user.username;
                 comment.save((err) => {
-                  if (err){
+                   if (err){
                     console.log(err);
                     req.flash('error', `Error saving comment ${comment._id}`);
+                    res.redirect('back');        
                   }
                   else {
                     campground.comments.push(comment);
                     foundUser.comments.push(comment);
                     foundUser.save((err) => {
-                      if (err){
+                       if (err){
                         req.flash('error', `Error saving user ${foundUser._id}`);
                         console.log(err);
+                        res.redirect('back');        
                       }
                       else {
                         campground.save(function (err) {
-                          if (err){
+                           if (err){
                             req.flash('error', `Error saving campground ${campground._id}`);
                             console.log(err);
+                            res.redirect('back');        
                           }
                           else {
                             req.flash('success', "Successfully Added Comment")
@@ -84,13 +91,14 @@ router.post('/', middleware.isLoggedIn, function (req,res) {
 //Comment Edit
 router.get("/:commentId/edit", middleware.checkCommentOwnership, function (req, res) {
   Campground.findById(req.params.campgroundId, function (err, matchedCampground) {
-    if (err){
+     if (err || !matchedCampground){
       req.flash('error', `Error finding campground ${req.params.campgroundId}`);
       console.log(err);
+      res.redirect('back');        
     }
     else {
       Comment.findById(req.params.commentId, function (err, matchedComment) {
-        if (err) {
+         if (err || !matchedComment) {
           console.log("something went wrong finding comment");
           req.flash('error', 'Error Finding Comment!')
           res.redirect('back');
@@ -107,9 +115,10 @@ router.get("/:commentId/edit", middleware.checkCommentOwnership, function (req, 
 //Comment Update
 router.put('/:commentId/', middleware.checkCommentOwnership, function(req, res) {
   Comment.findById(req.params.commentId, function (err, matchedComment) {
-    if (err){
+     if (err || !matchedComment){
       req.flash('error', `Error finding comment ${commentId}`)
       console.log(err);
+      res.redirect('back');
     }
     else {
       matchedComment.text = req.body.comment.text;
@@ -124,15 +133,17 @@ router.put('/:commentId/', middleware.checkCommentOwnership, function(req, res) 
 //Comment Delete
 router.delete('/:commentId', middleware.checkCommentOwnership, function(req, res) {
   Comment.findByIdAndDelete(req.params.commentId, function(err, deletedComment){
-    if (err){
+     if (err || !deletedComment){
       console.log(err);
       req.flash('error', `Error finding comment ${req.params.commentId}`);
+      res.redirect('back');
     }
     else {
       Campground.findById(req.params.campgroundId, (err, campground)=> {
-        if (err){
+         if (err || !campground){
           console.log(err);
           req.flash('error', `Error finding campground ${req.params.campgroundId}`);
+          res.redirect('back');
         }
         else {
           let i = 0;
@@ -141,15 +152,17 @@ router.delete('/:commentId', middleware.checkCommentOwnership, function(req, res
             if (campground.comments[i]._id.equals(deletedComment._id)) {
               campground.comments.splice(i);
               campground.save((err, savedcampground) => {
-                if (err){
+                 if (err || !savedcampground){
                   console.log(err);
                   req.flash('error', `Error saving campground ${req.params.campgroundId}`);
+                  res.redirect('back');
                 }
                 else {  
                   User.findById(req.user._id, (err, user) => {
-                    if (err){
+                     if (err || !user){
                       console.log(err);
                       req.flash('error', `Error finding user ${req.user._id}`);
+                      res.redirect('back');
                     }
                     else {
                       let i = 0;
@@ -158,9 +171,10 @@ router.delete('/:commentId', middleware.checkCommentOwnership, function(req, res
                         if (user.comments[i]._id.equals(deletedComment._id)) {
                           user.comments.splice(i);
                           user.save((err, saveduser) => {
-                            if (err){
+                             if (err || !saveduser){
                               console.log(err);
                               req.flash('error', `Error saving user ${req.user._id}`);
+                              res.redirect('back');
                             }
                             else {
                               req.flash('success', `Successfully deleted comment\n'${deletedComment.text.slice(0, 10)}'...`);

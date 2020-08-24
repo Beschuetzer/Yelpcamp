@@ -9,8 +9,10 @@ const express = require('express'),
 //Campground Index
 router.get('/', function(req, res){
   Campground.find({}, (err, returnedItem) => {
-    if (err) {
+    if (err || !returnedItem) {
       console.log("something went wrong finding");
+      req.flash('error', 'Something went wrong getting Campground :(')
+      res.redirect('back');
     }
     else {
       res.render(campgroundsRender + 'index', {campgrounds: returnedItem});
@@ -29,14 +31,11 @@ router.post('/',  middleware.isLoggedIn, (req,res) =>{
   const name = req.body.name,
         image = req.body.image,
         alt = "A Beautiful Campground Photo Taken by a User";
-  let description = req.body.description;
-  description = req.sanitize(description);
-
-  //need to validate data before creating new entry
-  const nameValid = name != null && name.trim() !== "" && !name.match(/[<>]/i),
+        nameValid = name != null && name.trim() !== "" && !name.match(/[<>]/i),
         imageValid = image.match(/\s*http:\/\/.*|\s*www\..*/i),
         descriptionValid = description != null && description.trim() !== "",
         altValid = alt != null && alt.trim() !== "" && !alt.match(/[<>]/i);
+  let description = req.sanitize(req.body.description);
 
   if (nameValid && imageValid && descriptionValid && altValid){
     const author = 
@@ -50,9 +49,10 @@ router.post('/',  middleware.isLoggedIn, (req,res) =>{
         username: req.user.username,
       },
     }, function (err, returnedItem) {
-      if (err) {
+       if (err || !returnedItem) {
         req.flash('error', 'Something went wrong creating Campground :(')
         console.log("something went wrong");
+        res.redirect('back');
       }
       else {
         req.flash('success', `'${name}' successfully created!`)
@@ -80,10 +80,10 @@ router.post('/',  middleware.isLoggedIn, (req,res) =>{
 //Campground Show
 router.get('/:campgroundId', (req, res) =>{
   Campground.findById(req.params.campgroundId).populate('comments').exec(function(err,foundItem){
-    if (err) {
+     if (err || !foundItem) {
       console.log("something went wrong show route");
-      req.flash('error', `Something went wrong getting campground ${req.params.campgroundId}`);
-
+      req.flash('error', `Something went wrong getting campground '${req.params.campgroundId}'`);
+      res.redirect(`/campgrounds`);
     }
     else {
       res.render(campgroundsRender + 'show', {campground: foundItem});
@@ -94,34 +94,36 @@ router.get('/:campgroundId', (req, res) =>{
 //Campground Delete
 router.delete('/:campgroundId', middleware.checkCampgroundOwnership, function (req,res){
   Campground.findByIdAndDelete(req.params.campgroundId, function(err, deletedCampground){
-    if (err){
+     if (err || !deletedCampground){
       console.log(err);
       req.flash('error', `Something went wrong getting campground ${req.params.campgroundId}`);
-
+      res.redirect('back');
     }
     else {
       deletedCampground.comments.forEach(comment => {
         Comment.findByIdAndDelete(comment, function (err, deletedComment) {
-          if (err){
+           if (err || !deletedComment){
             console.log(err);
             req.flash('error', `Something went wrong getting comment ${req.params.commentId}`);
+            res.redirect('back');        
           }
           else {
             req.flash('success', `Campground '${deletedCampground.name}' and its comments deleted successfully.`);
+            res.redirect('/campgrounds')
           }
         });
       });
     }
   });
-  res.redirect('/campgrounds')
 });
 
 //Campground Edit
 router.get('/:campgroundId/edit', middleware.checkCampgroundOwnership, function (req, res){
   Campground.findById(req.params.campgroundId, function(err, matchedItem) {
-    if (err){
+     if (err || !matchedItem){
       console.log(err);
       req.flash('error', `Something went wrong getting comment ${req.params.commentId}`);
+      res.redirect('back');        
     }
     else {
       res.render(campgroundsRender + 'edit', {campground: matchedItem})
@@ -133,7 +135,7 @@ router.get('/:campgroundId/edit', middleware.checkCampgroundOwnership, function 
 router.put('/:campgroundId', middleware.checkCampgroundOwnership, function (req, res){
   req.body.campgrounameription = req.sanitize(req.body.campground.description)   //sanitize any inputs from 'new.ejs' that use <%-...%> in show.ejs or elsewhere
   Campground.findByIdAndUpdate(req.params.campgroundId, req.body.campground, function (err, updatedItem) {
-    if (err) {
+     if (err || !updatedItem) {
       console.log("something went wrong updating " + req.params.campgroundId);
       req.flash('error', `Something went wrong getting campground object '${req.params.campgroundId}'`);
       res.redirect('/');
