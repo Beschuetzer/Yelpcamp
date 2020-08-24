@@ -15,15 +15,13 @@ middlewareObj.checkCampgroundOwnership = function (req, res, next) {
           "error",
           `Error finding campground '${req.params.campgroundId}' in database...`
         );
-        res.redirect("/campgrounds");
-      } else {
-        if (req.user._id.equals(matchedItem.author.id)) {
+        res.redirect("back");
+      } else if (req.user._id.equals(matchedItem.author.id)) {
           next();
-        } else {
-          //if not authorized
-          req.flash("error", `You are not authorized to do that!`);
-          res.redirect("back");
-        }
+      } else {
+        //if not authorized
+        req.flash("error", `You are not authorized to do that!`);
+        res.redirect("back");
       }
     });
   } else {

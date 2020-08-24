@@ -14,13 +14,66 @@
       <input type="text"class="form-control" name="name" id="name" class="" placeholder="Enter a Campground Name">
       <label for="image" class="newCampgroundLabel">Image Url of Campsite:</label>
       <input type="text"class="form-control" name="image" id="image" class="form-control" placeholder="URL to an Image of the Campsite">
+      <label for="price" class="newCampgroundLabel">Price Per Night:</label>
+      <div class="priceDiv w-50">
+        <input required type="number"class="form-control" name="price[value]" id="price" min="0" max="999999999" class="form-control" placeholder="Price per night">
+        <span class="form-control ml-0 px-0 py-0 " id="currency">
+          <select class="w-100 h-100" name="price[currency]" id="currencyList">
+          </select>
+        </span>
+      </div>
       <label for="image" class="newCampgroundLabel">Description of Campsite:</label>
       <textarea required rows="10" placeholder="Enter a Description of the Campsite" class="form-control" name="description"></textarea>
       <button class="form-control btn btn-outline-success btn-sm mb-0" type="submit">Submit</button>
     </form>
   </div>
 </div>
+<script>
+  //load the currency list
+  const currencies = [
+    {
+      name: "Dollar",
+      character: "$",
+    },  
+    {
+      name: "Euro",
+      character: "€",
+    },
+    {
+      name: "Pound",
+      character: "£",
+    },
+    {
+      name: "Peso",
+      character: "₱",
+    },
+    {
+      name: "Rupee",
+      character: "₨",
+    },
+    {
+      name: "Franc",
+      character: "₣",
+    },
+    {
+      name: "Yen",
+      character: "¥",
+    },  
+    {
+      name: "Ruble",
+      character: "₽",
+    },
+    {
+      name: "Bitcoin",
+      character: "₿",
+    },
+  ]
 
+  const currencyList = document.querySelector('#currencyList');
+  currencies.forEach((currency) => {
+    currencyList.innerHTML = currencyList.innerHTML + `<option value="${currency.character}">${currency.character}</option>`
+  });
+</script>
 <%- include("../partials/footer") %>
 
 

@@ -240,6 +240,17 @@ hr {
 
 }
 
+.priceDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+#currency {
+  width: 50px;
+}
+
 #showMain{
   background: black;
   padding-top: 15px;

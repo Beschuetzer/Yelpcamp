@@ -6,6 +6,10 @@ const campgroundSchema = new mongoose.Schema({
   image: String,
   description: String,
   alt: String,
+  price: {
+    value: {type: String, default: "N/A"},
+    currency: {type: String, default: "$"},
+  },
   comments: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -18,7 +22,7 @@ const campgroundSchema = new mongoose.Schema({
       ref: "User",
     },
     username: String,
-  }
+  },
 });
 
 //creating the campgrounds collection in the db 'yelpCamp'

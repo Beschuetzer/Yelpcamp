@@ -28,15 +28,17 @@ router.get('/new', middleware.isLoggedIn, (req,res) => {
 
 //Campground Create
 router.post('/',  middleware.isLoggedIn, (req,res) =>{
+  console.log(req.body.price);
   const name = req.body.name,
         image = req.body.image,
+        price = req.body.price,
         alt = "A Beautiful Campground Photo Taken by a User";
-        nameValid = name != null && name.trim() !== "" && !name.match(/[<>]/i),
-        imageValid = image.match(/\s*http:\/\/.*|\s*www\..*/i),
+        description = req.sanitize(req.body.description);
         descriptionValid = description != null && description.trim() !== "",
+        nameValid = name != null && name.trim() !== "" && !name.match(/[<>]/i),
+        imageValid = image.match(/\s*http[s]*:\/\/.*|\s*www\..*/i),
         altValid = alt != null && alt.trim() !== "" && !alt.match(/[<>]/i);
-  let description = req.sanitize(req.body.description);
-
+        
   if (nameValid && imageValid && descriptionValid && altValid){
     const author = 
     Campground.create({
@@ -44,6 +46,7 @@ router.post('/',  middleware.isLoggedIn, (req,res) =>{
       image: image,
       description: description,
       alt: alt,
+      price: price,
       author: {
         id: req.user._id,
         username: req.user.username,
@@ -108,11 +111,13 @@ router.delete('/:campgroundId', middleware.checkCampgroundOwnership, function (r
             res.redirect('back');        
           }
           else {
-            req.flash('success', `Campground '${deletedCampground.name}' and its comments deleted successfully.`);
-            res.redirect('/campgrounds')
+            console.log("deleting " + deletedComment);
           }
         });
       });
+      req.flash('success', `Campground '${deletedCampground.name}' and its comments deleted successfully.`);
+      res.redirect('/campgrounds');
+
     }
   });
 });
