@@ -90,6 +90,7 @@ router.post('/', middleware.isLoggedIn, function (req,res) {
 
 //Comment Edit
 router.get("/:commentId/edit", middleware.checkCommentOwnership, function (req, res) {
+  console.log("edit");
   Campground.findById(req.params.campgroundId, function (err, matchedCampground) {
      if (err || !matchedCampground){
       req.flash('error', `Error finding campground ${req.params.campgroundId}`);

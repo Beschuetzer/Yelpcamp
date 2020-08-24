@@ -8,14 +8,14 @@ const middlewareObj = {};
 middlewareObj.checkCampgroundOwnership = function (req, res, next) {
   if (req.isAuthenticated()) {
     Campground.findById(req.params.campgroundId, function (err, matchedItem) {
-      if (err) {
+      if (err || !matchedItem) {
         //if error finding
         console.log("something went wrong finding campground");
         req.flash(
           "error",
           `Error finding campground '${req.params.campgroundId}' in database...`
         );
-        res.redirect("back");
+        res.redirect("/campgrounds");
       } else {
         if (req.user._id.equals(matchedItem.author.id)) {
           next();
@@ -44,22 +44,20 @@ middlewareObj.isLoggedIn = function (req, res, next) {
 middlewareObj.checkCommentOwnership = function (req, res, next) {
   if (req.isAuthenticated()) {
     Comment.findById(req.params.commentId, function (err, matchedComment) {
-      if (err) {
+      if (err || !matchedComment) {
         //if error finding ID
         console.log("something went wrong finding campground");
         req.flash(
           "error",
           `Error finding comment '${req.params.commentId}' in database...`
         );
-        res.redirect("back");
-      } else {
-        if (req.user._id.equals(matchedComment.author.id)) {
+        res.redirect("/campgrounds");
+      } else if (req.user._id.equals(matchedComment.author.id)) {
           next();
-        } else {
-          //if not authorized
-          req.flash("error", `You are not authorized to do that!`);
-          res.redirect("back");
-        }
+      } else {
+        //if not authorized
+        req.flash("error", `You are not authorized to do that!`);
+        res.redirect("back");
       }
     });
   } else {
@@ -73,8 +71,9 @@ middlewareObj.checkWhetherHasCommentAlready = function (req, res, next) {
   Campground.findById(req.params.campgroundId)
     .populate("comments")
     .exec(function (err, campground) {
-      if (err) {
+      if (err || !campground) {
         console.log(err);
+        res.redirect("/campgrounds");
       } else {
         let ownsComment = false;
         let j = 0;
