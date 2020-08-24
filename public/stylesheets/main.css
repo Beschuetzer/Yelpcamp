@@ -213,6 +213,33 @@ hr {
   margin-top: var(--default-margin-size);
 }
 
+.error404Div {
+  height: 100%;
+  text-align: center;
+  margin-top: 50px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.title h1{
+  color: rgba(255, 255, 255, 0.829);
+  font-weight: 700;
+  font-size: 100px !important;
+}
+
+.message{
+  position:absolute;
+  top:66%;
+  left: 50%;
+  margin-top: -65px;
+  margin-left: -268.845px;
+}
+
+.message h2 {
+  font-size: 33px;
+  color: rgba(255, 255, 255, 0.829);
+
+}
+
 #showMain{
   background: black;
   padding-top: 15px;

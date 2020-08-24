@@ -8,6 +8,7 @@ function isLoggedIn (req, res, next){
     if (req.isAuthenticated()){
       next();
     }
+    req.flash('error', `Please login first`);
     res.redirect('/login');
 }
 
@@ -51,19 +52,21 @@ router.post('/register', (req,res) =>{
     User.register(new User({username: req.body.username}), req.body.password, function(err, user){
         if (err){
             console.log(err);
-            res.render('register');
+            req.flash('error', `${err.message}`);
+            res.redirect('/register');
         }
         else {
             passport.authenticate('local')(req, res, function(){		//'local' is the passport authentication strategy
-            //Do something when authenticated
-            res.redirect('/campgrounds');
+                //Do something when authenticated
+                req.flash('success', `Welcome to YelpCamp ${req.body.username}!`);
+                res.redirect('/campgrounds');
             });
         }
     });
 });
   
 router.get('*', function(req, res) {
-    res.send(`Sorry, ${req.originalUrl} page not found...\nWhat are you doing with your life?`);
+    res.render('404', {page: req.originalUrl});
 });
 
 module.exports = router;

@@ -1,7 +1,11 @@
 <%- include("partials/header") %>
 
-<div class="mt-5 container text-center">
+<div class="container text-center">
+<% if (successMessage[0] || errorMessage[0]) { %>
+    <div class="jumbotron mb-0 mt-0">
+<% } else { %>
     <div class="jumbotron mb-0">
+<% } %>
         <h1>Create a YelpCamp Account</h1>
     </div>
     <div class="container textboxes">
