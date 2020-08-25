@@ -12,6 +12,15 @@ function isLoggedIn (req, res, next){
     res.redirect('/login');
 }
 
+const stripe = require('stripe');
+      paymentIntent = await stripe.paymentIntents.create({
+          amount: 2000,            //number of cents
+          currency: 'usd',
+          //Verify integration
+          metadata: {integration_check: 'accept_a_payment'},
+      })
+
+
 //landing
 router.get('/', function(req, res){
     res.render('landing');

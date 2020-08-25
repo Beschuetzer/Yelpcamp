@@ -73,3 +73,9 @@ app.listen(3000, function(){
 //#endregion
 
 //TODO: find a way to go to the last page when logging in
+for (const key in obj) {
+  if (obj.hasOwnProperty(key)) {
+    const value = obj[key];
+    const {key} = obj;
+  }
+}
