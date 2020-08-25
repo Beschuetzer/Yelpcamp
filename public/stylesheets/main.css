@@ -285,9 +285,10 @@ hr {
 }
 
 @media (max-width: 769px) {
-  .card {
+  .card, .col-md-9 {
     margin: var(--default-margin-size) 0 0 0;
   }
+
 }
 @media (max-width: 530px) {
   h1 {

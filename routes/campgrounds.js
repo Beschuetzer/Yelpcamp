@@ -28,7 +28,6 @@ router.get('/new', middleware.isLoggedIn, (req,res) => {
 
 //Campground Create
 router.post('/',  middleware.isLoggedIn, (req,res) =>{
-  console.log(req.body.price);
   const name = req.body.name,
         image = req.body.image,
         price = req.body.price,
@@ -40,7 +39,6 @@ router.post('/',  middleware.isLoggedIn, (req,res) =>{
         altValid = alt != null && alt.trim() !== "" && !alt.match(/[<>]/i);
         
   if (nameValid && imageValid && descriptionValid && altValid){
-    const author = 
     Campground.create({
       name: name,
       image: image,
@@ -84,12 +82,16 @@ router.post('/',  middleware.isLoggedIn, (req,res) =>{
 router.get('/:campgroundId', (req, res) =>{
   Campground.findById(req.params.campgroundId).populate('comments').exec(function(err,foundItem){
      if (err || !foundItem) {
-      console.log("something went wrong show route");
       req.flash('error', `Something went wrong getting campground '${req.params.campgroundId}'`);
       res.redirect(`/campgrounds`);
     }
     else {
-      res.render(campgroundsRender + 'show', {campground: foundItem});
+      const leftsideCurrencies = [
+        "$",
+        "€",
+        "¥",
+      ];
+      res.render(campgroundsRender + 'show', {campground: foundItem, leftsideCurrencies: leftsideCurrencies});
     }
   });
 });
@@ -138,7 +140,9 @@ router.get('/:campgroundId/edit', middleware.checkCampgroundOwnership, function 
 
 //Campground Update
 router.put('/:campgroundId', middleware.checkCampgroundOwnership, function (req, res){
-  req.body.campgrounameription = req.sanitize(req.body.campground.description)   //sanitize any inputs from 'new.ejs' that use <%-...%> in show.ejs or elsewhere
+  req.body.campground.price = req.body.price;
+  console.log(req.body.campground);
+  req.body.campground.description = req.sanitize(req.body.campground.description)   //sanitize any inputs from 'new.ejs' that use <%-...%> in show.ejs or elsewhere
   Campground.findByIdAndUpdate(req.params.campgroundId, req.body.campground, function (err, updatedItem) {
      if (err || !updatedItem) {
       console.log("something went wrong updating " + req.params.campgroundId);
@@ -146,6 +150,7 @@ router.put('/:campgroundId', middleware.checkCampgroundOwnership, function (req,
       res.redirect('/');
     }
     else {
+      console.log({updatedItem});
       req.flash('success', `${updatedItem.name} updated successfully`)
       res.redirect(req.params.campgroundId);  
     }

@@ -9,6 +9,7 @@ const campgroundSchema = new mongoose.Schema({
   price: {
     value: {type: String, default: "N/A"},
     currency: {type: String, default: "$"},
+    // name: {type: String, default: ""},
   },
   comments: [
     {

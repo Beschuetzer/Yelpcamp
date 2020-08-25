@@ -22,6 +22,7 @@ const data = [
         price: {
             value: "10.00",
             currency: "€",
+            // name: "euro",
         } 
     },
     {
@@ -32,6 +33,7 @@ const data = [
         price: {
             value: "8.00",
             currency: "€",
+            // name: "euro",
         } 
     },
     {
@@ -42,6 +44,7 @@ const data = [
         price: {
             value: "3.75",
             currency: "€",
+            // name: "euro",
         } 
     },
     {
@@ -52,6 +55,7 @@ const data = [
         price: {
             value: "13",
             currency: "€",
+            // name: "euro",
         } 
     },
     {
@@ -62,6 +66,7 @@ const data = [
         price: {
             value: "12.00",
             currency: "€",
+            // name: "euro",
         } 
     },
     {
@@ -72,6 +77,7 @@ const data = [
         price: {
             value: "20.00",
             currency: "€",
+            // name: "euro",
         } 
     },
     {
@@ -82,6 +88,7 @@ const data = [
         price: {
             value: "5",
             currency: "€",
+            // name: "euro",
         } 
     },
     {
@@ -92,6 +99,7 @@ const data = [
         price: {
             value: "18",
             currency: "€",
+            // name: "euro",
         } 
     },
 ]

@@ -18,14 +18,17 @@
         <img class="img-fluid" id="showImg" src="<%= campground.image %>"></img>
         <div class="caption px-3 mt-4">
           <a href="#"><h4 class="name mb-0"><%= campground.name %></h4></a>
-          <h4 class="price"><%= campground.price.currency %><%= campground.price.value %>/night</h4>
+          <% if (leftsideCurrencies.includes(campground.price.currency)) { %>
+            <h4 class="price"> <em><%= campground.price.currency %><%= campground.price.value %> / night</em></h4>
+          <% } else { %>
+            <h4 class="price"><em><%= campground.price.value %><%= campground.price.currency %> / night</em></h4>
+          <% } %>
         </div>
         <div class="author">
           <h6><em>by <a href="#"><%= campground.author.username %></em></h6></a>
           <div class="hidden"></div>
         </div>
         <p class="lead mt-3 w-100 text-justify px-3"><%- campground.description %></p>
-        <% console.log(`${currentUser._id} and ${campground.author.id}`) %>
         <% if (currentUser && currentUser._id.equals(campground.author.id)) { %>
         <div class="card-body buttons pt-1">
           <a class="btn btn-md btn-outline-primary buttonWidth" href="/campgrounds/<%= campground._id %>/edit" type="submit">Edit</a>
