@@ -4,7 +4,9 @@
   "description": "Sign up for a Camping Trip!",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "PORT=3000 nodemon app.js",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",

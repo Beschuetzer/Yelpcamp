@@ -247,6 +247,11 @@ hr {
   margin: auto;
 }
 
+/* #navbarSupportedContent{
+  display: inline-block !important;
+  width: 200px !important;
+} */
+
 #currency {
   width: 50px;
 }

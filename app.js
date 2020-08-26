@@ -14,6 +14,7 @@ const express = require('express'),
       seedDB = require('./helpers/seed'),
       indexRoutes = require('./routes/index'),
       commentRoutes = require('./routes/comments'),
+      paymentRoutes = require('./routes/payments'),
       flash = require('connect-flash'),
       campgroundRoutes = require('./routes/campgrounds');
       
@@ -62,20 +63,15 @@ app.use(function (req, res, next){
 //importing router routes from '/router
 app.use("/campgrounds/:campgroundId/comments", commentRoutes);
 app.use("/campgrounds", campgroundRoutes);
-app.use(indexRoutes);
+app.use(paymentRoutes);
+app.use(indexRoutes);  //TODO: this must come last for routes as it has * route
 
 //allows you to omit .ejs for every file
 app.set('view engine', 'ejs');
 
-app.listen(3000, function(){
+app.listen(process.env.PORT, process.env.IP, function(){
   console.log("Starting Yelp Camp Server...");
 });
 //#endregion
 
 //TODO: find a way to go to the last page when logging in
-for (const key in obj) {
-  if (obj.hasOwnProperty(key)) {
-    const value = obj[key];
-    const {key} = obj;
-  }
-}
