@@ -1,3 +1,5 @@
+const middlewareObj = require('../middleware/index');
+
 //routes related to campgrounds
 const express = require('express'),
       router = express.Router(),
@@ -7,7 +9,7 @@ const express = require('express'),
       Comment = require('../models/comment');
 
 //Campground Index
-router.get('/', function(req, res){
+router.get('/', middlewareObj.checkHasPaid, function(req, res){
   Campground.find({}, (err, returnedItem) => {
     if (err || !returnedItem) {
       console.log("something went wrong finding");

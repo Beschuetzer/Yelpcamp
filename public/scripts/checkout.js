@@ -2,7 +2,8 @@
     const stripe = Stripe("pk_test_51HK3ZZLJjWMRHKWkWnC7wozo8aj6EpVOtHjdz1v9HDufQmQ35vaXJm9OqhWFurzXIWi05j3fyMjdgc7C264dzB0m00vbdn32JB");
     // The items the customer wants to buy
     const purchase = {
-      items: [{ id: "xl-tshirt" }]
+      items: [{ id: "yelpCampRegistration" }],
+      paymentMethodId: null,
     };
     // Disable the button until we have Stripe set up on the page
     document.querySelector("button").disabled = true;
@@ -46,13 +47,13 @@
         form.addEventListener("submit", function(event) {
           event.preventDefault();
           // Complete payment when the submit button is clicked
-          payWithCard(stripe, card, data.clientSecret);
+          payWithCard(stripe, card, data.clientSecret, purchase);
         });
       });
     // Calls stripe.confirmCardPayment
     // If the card requires authentication Stripe shows a pop-up modal to
     // prompt the user to enter authentication details without leaving your page.
-    const payWithCard = function(stripe, card, clientSecret) {
+    const payWithCard = function(stripe, card, clientSecret, purchase) {
       loading(true);
       stripe
         .confirmCardPayment(clientSecret, {
@@ -66,15 +67,22 @@
             showError(result.error.message);
           } else {
             // The payment succeeded!
+            purchase.paymentMethodId = result.paymentIntent.id;
+
             console.log("order complete");
             orderComplete(result.paymentIntent.id);
-            fetch("/test", {
-                method: "get",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify(purchase)
-            });
+
+            return fetch("/paid", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(purchase)
+            })
+            .then(function (result) {
+              console.log(result);
+              window.location.href = '/campgrounds?paid=true';
+            })
           }
         });
     };
