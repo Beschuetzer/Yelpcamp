@@ -1,3 +1,5 @@
+const middlewareObj = require('../middleware/index');
+
 //routes related to campgrounds
 const express = require('express'),
       router = express.Router(),
@@ -79,7 +81,7 @@ router.post('/',  middleware.isLoggedIn, (req,res) =>{
 });
 
 //Campground Show
-router.get('/:campgroundId', (req, res) =>{
+router.get('/:campgroundId', middlewareObj.checkHasPaid, (req, res) =>{
   Campground.findById(req.params.campgroundId).populate('comments').exec(function(err,foundItem){
      if (err || !foundItem) {
       req.flash('error', `Something went wrong getting campground '${req.params.campgroundId}'`);

@@ -28,7 +28,6 @@ router.post("/create-payment-intent", async (req, res) => {
         currency: "usd",
         metadata: {integration_check: 'accept_a_payment'},
         });
-        console.log("Done with payment");
         res.send({
             clientSecret: paymentIntent.client_secret,
         });

@@ -95,4 +95,21 @@ middlewareObj.checkWhetherHasCommentAlready = function (req, res, next) {
     });
 };
 
+middlewareObj.checkHasPaid = function (req, res, next) {
+  console.log(req.user);
+  if (req.user) {
+    if (req.user.isPaid) {
+      return next();
+    }
+    else {
+      req.flash('error', `Please Pay the Registration Fee to view campgrounds`);
+      res.render('checkout', {amount: "2000"});
+    }
+  }
+  else {
+    req.flash('error', `Please Login First`);
+    res.redirect('/login');
+  }
+};
+
 module.exports = middlewareObj;
