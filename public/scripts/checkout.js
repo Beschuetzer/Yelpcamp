@@ -66,15 +66,22 @@
             showError(result.error.message);
           } else {
             // The payment succeeded!
+            purchase.paymentMethodId = result.paymentIntent.id;
+        
             console.log("order complete");
             orderComplete(result.paymentIntent.id);
-            fetch("/test", {
-                method: "get",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify(purchase)
-            });
+        
+            return fetch("/paid", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(purchase)
+            })
+            .then(function (result) {
+              console.log(result);
+              window.location.href = '/campgrounds?paid=true';
+            })
           }
         });
     };
@@ -113,3 +120,7 @@
         document.querySelector("#button-text").classList.remove("hidden");
       }
     };
+
+
+
+ 
