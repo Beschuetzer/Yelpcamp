@@ -10,8 +10,6 @@ const userSchema = new mongoose.Schema({
             ref: "Comment",
         }
     ],
-    isPaid: {type: Boolean, default: false},
-    paymentMethodId: {type: String, default: ""},
 });
 
 //needed if using authentication based on this model/class

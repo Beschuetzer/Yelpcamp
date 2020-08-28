@@ -95,20 +95,4 @@ middlewareObj.checkWhetherHasCommentAlready = function (req, res, next) {
     });
 };
 
-middlewareObj.checkHasPaid = function (req, res, next) {
-  console.log(req.user);
-  if (req.user) {
-    if (req.user.isPaid) {
-      next();
-    }
-    else {
-      req.flash('error', `Please Pay the Registration Fee to do That`);
-      res.render('checkout', {amount: 2000});
-    }
-  }
-  else {
-    res.redirect('/login');
-  }
-};
-
 module.exports = middlewareObj;

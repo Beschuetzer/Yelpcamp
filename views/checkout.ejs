@@ -60,13 +60,12 @@
         <% } %>
 
 
+
         <form id="payment-form">
-            <h1 class="text-center">YelpCamp Registration Fee</h1>
-            <input type="text" id="email" placeholder="Enter Email Address For Receipt" />
+            <input type="text" id="email" placeholder="Email address" />
             <div id="card-element"><!--Stripe.js injects the Card Element--></div>
             <button id="submit">
                 <div class="spinner hidden" id="spinner"></div>
-                <% console.log(amount) %> 
                 <span id="button-text">Pay $<%= Math.round(amount) / 100 %></span>
             </button>
             <p id="card-error" role="alert"></p>

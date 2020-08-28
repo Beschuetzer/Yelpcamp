@@ -35,8 +35,7 @@ mongoose.set('useFindAndModify', false);
 //#region Configuring Express
 //telling express to serve files in 'public'
 app.use(express.static(__dirname + "/public"));
-app.use(express.json());    //needed for stripe payments
-app.use(express.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
 app.use(expressSanitizer());
 app.use(flash());
