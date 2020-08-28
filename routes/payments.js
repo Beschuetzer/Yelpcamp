@@ -2,23 +2,8 @@ const express = require('express'),
       router = express.Router(),	//mergeParams allow req.params to work properly
       stripe = require('stripe')("sk_test_51HK3ZZLJjWMRHKWkYe84C38FjQ1BEMQo9GxJ1NEvnnenC8kTYM3XENRW 61S5k4BTBEFx4AfyS1bGOh4MbR7RQ8il00djH55hRQ");
 //checkout
-router.get('/checkout', async function(req, res) {
-    console.log("checkout");
-    try {
-        let amount = calculateOrderAmount([1000,1400,2000,3900]);
-        // Create a PaymentIntent with the order amount and currency
-        const paymentIntent = await stripe.paymentIntents.create({
-            amount: amount / 100, //calculateOrderAmount(items) create a function to calculate price to charge
-            currency: "usd",
-            metadata: {integration_check: 'accept_a_payment'},
-        });
-        const {clientSecret} = paymentIntent;
-        console.log({clientSecret});
-        res.render('checkout', {clientSecret, amount});
-    } catch (error) {
-        req.flash('error', `${error.message}`);
-        res.redirect('back');
-    }
+router.get('/checkout', function(req, res) {
+    res.render('checkout', { amount: 1999});
 });
 
 router.post('/test', (req, res) =>{
@@ -39,7 +24,7 @@ router.post("/create-payment-intent", async (req, res) => {
         const { items } = req.body;
         // Create a PaymentIntent with the order amount and currency
         const paymentIntent = await stripe.paymentIntents.create({
-        amount: calculateOrderAmount([1000,1400,2000,3900]),
+        amount: 1999,
         currency: "usd",
         metadata: {integration_check: 'accept_a_payment'},
         });

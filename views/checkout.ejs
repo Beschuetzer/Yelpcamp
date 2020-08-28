@@ -60,11 +60,12 @@
         <% } %>
 
 
-
-        <form id="payment-form">
+        <div class="container text-center">
+          <form id="payment-form">
+            <h1>YelpCamp Registration Fee</h1>
             <input type="text" id="email" placeholder="Email address" />
             <div id="card-element"><!--Stripe.js injects the Card Element--></div>
-            <button id="submit">
+            <button id="submit btn btn-md btn-primary">
                 <div class="spinner hidden" id="spinner"></div>
                 <span id="button-text">Pay $<%= Math.round(amount) / 100 %></span>
             </button>
@@ -73,10 +74,12 @@
                 Payment succeeded, see the result in your
                 <a href="https://dashboard.stripe.com/test/payments?status%5B%5D=successful" target="_blank">Stripe dashboard.</a> Refresh the page to pay again.
             </p>
-        </form>
+          </form>
+          <p class="text-center mt-3"><i class="far fa-copyright"></i> Adam Major 2020</p>
+        </div>
 
 
-        <p class="text-center mt-3"><i class="far fa-copyright"></i> Adam Major 2020</p>
+
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
