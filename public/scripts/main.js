@@ -73,3 +73,26 @@ function loadCurrenciesNew(e) {
     currencyList.innerHTML = currencyList.innerHTML + `<option value="${currency.character}">${currency.character}</option>`
   });
 }
+
+function adminCodeShow(e) {
+    const adminCodeDiv = document.querySelector('#adminCodeDiv');
+    const adminCodeCheckboxDiv = document.querySelector('#adminCodeCheckboxDiv');
+    const adminCodeHideCheckbox = document.querySelector('#adminCodeHideCheckbox');
+    const adminCode = document.querySelector('#adminCode');
+    adminCodeHideCheckbox.checked = false;
+    adminCodeDiv.classList.remove('d-none');
+    adminCodeCheckboxDiv.style.display = "none";
+    adminCode.required = true;
+
+}
+
+function adminCodeHide(e) {
+    const adminCodeDiv = document.querySelector('#adminCodeDiv');
+    const adminCodeCheckboxDiv = document.querySelector('#adminCodeCheckboxDiv');
+    const adminCodeCheckbox = document.querySelector('#adminCodeCheckbox');
+    const adminCode = document.querySelector('#adminCode');
+    adminCodeCheckbox.checked = false;
+    adminCodeDiv.classList.add('d-none');
+    adminCodeCheckboxDiv.style.display = "block";
+    adminCode.required = false;
+}

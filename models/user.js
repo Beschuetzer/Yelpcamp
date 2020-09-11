@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
             ref: "Comment",
         }
     ],
+    isAdmin: {type: Boolean, default: false},
+    hasPaid: {type: Boolean, default: false},
 });
 
 //needed if using authentication based on this model/class

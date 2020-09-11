@@ -1,4 +1,6 @@
 <%- include("../partials/header") %>
+<% console.log(currentUser.isAdmin) %>
+<% console.log("WTF?") %>
 <% if (errorMessage[0] || successMessage[0]) { %>
   <div class="container-fluid text-center title">
     <% } else { %>
@@ -29,7 +31,7 @@
           <div class="hidden"></div>
         </div>
         <p class="lead mt-3 w-100 text-justify px-3"><%- campground.description %></p>
-        <% if (currentUser && currentUser._id.equals(campground.author.id)) { %>
+        <% if (currentUser && currentUser.isAdmin || currentUser._id.equals(campground.author.id)) { %>
         <div class="card-body buttons pt-1">
           <a class="btn btn-md btn-outline-primary buttonWidth" href="/campgrounds/<%= campground._id %>/edit" type="submit">Edit</a>
           <form class="text-left" action="/campgrounds/<%= campground._id %>?_method=delete" method="post">
@@ -43,7 +45,7 @@
           <div class="hidden"></div>
           <% let j = 0, hasCommentAlready = false; %>
           <% while (campground.comments[j]) { %>
-            <% if (currentUser && currentUser._id.equals(campground.comments[j].author.id)) { %>
+            <% if (currentUser && currentUser.isAdmin || currentUser._id.equals(campground.comments[j].author.id)) { %>
               <a id="commentButton" class="btn btn-md btn-outline-success" href="/campgrounds/<%= campground._id %>/comments/<%= campground.comments[j]._id %>/edit">Change Review</a>
               <% hasCommentAlready = true; %>
               <% break; %>
@@ -64,7 +66,7 @@
         <div class="comment">
           <div class="edit">
               <span class="author mt-3 ml-0 mb-0"><strong><%= comment.author.username %></strong></span> 
-          <% if (currentUser && currentUser._id.equals(comment.author.id)) { %>
+          <% if (currentUser && currentUser.isAdmin ||currentUser._id.equals(comment.author.id)) { %>
               <a class="scaled" href="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>/edit"><i class="scaleEdit far fa-edit"></i></a>
               <form id="" action="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>?_method=delete" method="post">
                 <button id="deleteComment" class="scaleDelete" type="submit"><i class="far fa-trash-alt"></i></button>
@@ -82,4 +84,4 @@
 </div>
    
 
-<%- include("../partials/footer") %>me
+<%- include("../partials/footer") %>

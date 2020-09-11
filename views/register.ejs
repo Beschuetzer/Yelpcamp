@@ -33,6 +33,21 @@
                     <small for="passwordCheckbox" class="mt-0 form-check-label">Show Password</small>
                 </div>
             </div>
+            <div id="adminCodeCheckboxDiv" class="form-group">
+                <div class="formCheckbox">
+                    <input onclick="adminCodeShow()" id="adminCodeCheckbox" class="form-check-input" type="checkbox" onclick="togglePasswordVisibility()">
+                    <label for="adminCodeCheckbox" class="my-0 form-check-label">I have an Admin Code</label>
+                </div>
+            </div>
+            <div id="adminCodeDiv" class="form-group d-none">
+                <label for="adminCode">Admin Code:</label>
+                <input class="form-control" type="number" name="userInfo[adminCode]" id="adminCode" placeholder="Enter the Admin Code">
+
+                <div class="formCheckbox mt-0">
+                    <input onclick="adminCodeHide()" id="adminCodeHideCheckbox" class="form-check-input" type="checkbox" onclick="togglePasswordVisibility()">
+                    <label for="adminCodeCheckbox" class="my-0 form-check-label">Lost Admin Code?</label>
+                </div>
+            </div>
             <div class="form-group formCheckbox">
                 <input required type="checkbox" id="cb_privacyPolicy" class="form-check-input"></input>
                 <label class="form-check-label" for="cb_privacyPolicy">I have read and agree to YelpCamp's <a target="_blank" href="/privacypolicy">Privacy Policy</a></label>

@@ -16,7 +16,7 @@ middlewareObj.checkCampgroundOwnership = function (req, res, next) {
           `Error finding campground '${req.params.campgroundId}' in database...`
         );
         res.redirect("back");
-      } else if (req.user._id.equals(matchedItem.author.id)) {
+      } else if (req.user.isAdmin || req.user._id.equals(matchedItem.author.id)) {
           next();
       } else {
         //if not authorized
@@ -50,7 +50,7 @@ middlewareObj.checkCommentOwnership = function (req, res, next) {
           `Error finding comment '${req.params.commentId}' in database...`
         );
         res.redirect("/campgrounds");
-      } else if (req.user._id.equals(matchedComment.author.id)) {
+      } else if (req.user.isAdmin || req.user._id.equals(matchedComment.author.id))  {
           next();
       } else {
         //if not authorized
@@ -98,7 +98,7 @@ middlewareObj.checkWhetherHasCommentAlready = function (req, res, next) {
 middlewareObj.checkHasPaid = function (req, res, next) {
   console.log(req.user);
   if (req.user) {
-    if (req.user.isPaid) {
+    if (req.user.hasPaid || req.user.isAdmin) {
       return next();
     }
     else {

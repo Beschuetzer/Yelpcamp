@@ -11,9 +11,8 @@
   router.post('/paid', async (req, res) =>{
       console.log(req.user);
       req.user.paymentMethodId = req.body.paymentMethodId;
-      req.user.isPaid = true;
+      req.user.hasPaid = true;
       await req.user.save();
-      console.log(req.user);
       req.flash('success', `Welcome to the Private Section of YelpCamp!`);
       res.send('paid');
   });

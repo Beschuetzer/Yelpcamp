@@ -50,7 +50,12 @@ router.post('/register', (req,res) =>{
     //Signing up a New User
     //register(username, passwordToCreateHashFrom, callback)
     //THE USERNAME MUST BE NAMED EXACTLY 'username' IN THE NAME ATTR FOR THE SUBMITTING register.ejs FORM as well as the User model must have 'username' key
-    User.register(new User({username: req.body.username}), req.body.password, function(err, user){
+    const newUser = new User({username: req.body.username});
+    if (req.body.userInfo.adminCode === '1234') {
+        console.log(req.body.userInfo.adminCode);
+        newUser.isAdmin = true;
+    }
+    User.register(newUser, req.body.password, function(err, user){
         if (err || !user){
             console.log(err);
             req.flash('error', `${err.message}`);
