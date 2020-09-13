@@ -3,6 +3,7 @@ const Campground = require("../models/campground");
 const Comment = require("../models/comment");
 const User = require("../models/user");
 const password = "test";
+const faker = require('faker');
 
 const users = [
     {username: "Homer", password: password},
@@ -151,7 +152,7 @@ function seedDB(){
                     }
                     console.log("removed comments!");
                     users.forEach(user => {
-                        User.register(new User({username: user.username}), user.password, function(err, newUser){
+                        User.register(new User({username: user.username, email: faker.internet.email()}), user.password, function(err, newUser){
                             if (err){
                                 console.log(err);
                             }

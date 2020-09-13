@@ -37,11 +37,11 @@ const currencies = [
     },
 ];
 
-function togglePasswordVisibility() {
-    const textBox = document.getElementById("password");
+function togglePasswordVisibility(string) {
+    const textBox = document.getElementById(string);
     if (textBox.type === "password") {
     textBox.type = "textbox";
-    } else {
+    } else if (textBox.type === "textbox") {
     textBox.type = "password";
     }
 }

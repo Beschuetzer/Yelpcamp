@@ -289,7 +289,7 @@ hr {
     align-items: center;
 }
 
-#pwdResetForm{
+#forgotPasswordForm, #pwdResetForm{
   width: 400px;
   margin: auto;
 }
@@ -319,7 +319,7 @@ hr {
 }
 
 @media (max-width: 435px) {
-  #pwdResetForm{
+  #forgotPasswordForm, #pwdResetForm{
     width: 100%;
     margin: auto;
   }

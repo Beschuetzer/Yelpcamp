@@ -16,13 +16,10 @@ const express = require('express'),
       commentRoutes = require('./routes/comments'),
       paymentRoutes = require('./routes/payments'),
       flash = require('connect-flash'),
-      result = dotenv.config(),
       campgroundRoutes = require('./routes/campgrounds');
-      
-if (result.error) {
-  throw result.error;
-}
-console.log(result.parsed);
+
+require('dotenv').config();
+
 
 mongoose.connect('mongodb://localhost:27017/' + dbName, {
   useNewUrlParser: true,

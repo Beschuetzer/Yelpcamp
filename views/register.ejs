@@ -29,14 +29,14 @@
                 <label for="username">Password:</label>
                 <input class="form-control" required type="password" name="password" id="password" placeholder="Enter a Password">
                 <div class="formCheckbox">
-                    <input id="passwordCheckbox" class="form-check-input" type="checkbox" onclick="togglePasswordVisibility()">
+                    <input id="passwordCheckbox" class="form-check-input" type="checkbox" onclick="togglePasswordVisibility(`password`)">
                     <small for="passwordCheckbox" class="mt-0 form-check-label">Show Password</small>
                 </div>
             </div>
             <div id="adminCodeCheckboxDiv" class="form-group">
                 <div class="formCheckbox">
-                    <input onclick="adminCodeShow()" id="adminCodeCheckbox" class="form-check-input" type="checkbox" onclick="togglePasswordVisibility()">
-                    <label for="adminCodeCheckbox" class="my-0 form-check-label">I have an Admin Code</label>
+                    <input onclick="adminCodeShow(); focusAdminBox()" id="adminCodeCheckbox" class="form-check-input" type="checkbox" onclick="togglePasswordVisibility()">
+                    <label onclick="focusAdminBox()" for="adminCodeCheckbox" class="my-0 form-check-label">I have an Admin Code</label>
                 </div>
             </div>
             <div id="adminCodeDiv" class="form-group d-none">
@@ -45,7 +45,7 @@
 
                 <div class="formCheckbox mt-0">
                     <input onclick="adminCodeHide()" id="adminCodeHideCheckbox" class="form-check-input" type="checkbox" onclick="togglePasswordVisibility()">
-                    <label for="adminCodeCheckbox" class="my-0 form-check-label">Lost Admin Code?</label>
+                    <label for="adminCodeHideCheckbox" class="my-0 form-check-label">Lost Admin Code?</label>
                 </div>
             </div>
             <div class="form-group formCheckbox">
@@ -57,4 +57,9 @@
     </div>
 </div>
 
+<script>
+    function focusAdminBox() {
+        document.querySelector('#adminCode').focus();
+    }
+</script>
 <%- include("partials/footer") %>

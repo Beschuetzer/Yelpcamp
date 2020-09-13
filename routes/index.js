@@ -1,3 +1,5 @@
+const { nextTick } = require('process');
+
 //all purpose routes
 const express = require('express'),
       router = express.Router(),
@@ -8,11 +10,11 @@ const express = require('express'),
       async = require('async');
       
 //resetting password
-router.get('/resetPassword', (req, res) => {
-    res.render('resetPassword');
+router.get('/forgotPassword', (req, res) => {
+    res.render('forgotPassword');
 });
 
-router.post('/resetPassword', (req, res) => {
+router.post('/forgotPassword', (req, res, next) => {
     async.waterfall([
         //Creates a 
         function (done) {
@@ -25,7 +27,7 @@ router.post('/resetPassword', (req, res) => {
             User.findOne({email: req.body.email}, (err, user) => {
                 if(!user) {
                     req.flash('error', `No Account with the email '${req.body.email}' exists.`);
-                    return res.redirect('/resetPassword');
+                    return res.redirect('/forgotPassword');
                 }
                 else if (err) {
                     req.flash('error', `Error retrieving email.  Try again.`);
@@ -33,7 +35,11 @@ router.post('/resetPassword', (req, res) => {
                 user.resetPasswordToken = token;
                 user.resetPasswordExpires = Date.now() + 3600000 //in MS
                 user.save((err) => {
-                    done(error, token, user);
+                    if (err) {
+                        req.flash('error', `Error saving User`);
+                        return res.redirect('/forgotPassword');
+                    }
+                    done(err, token, user);
                 });
             });
         },
@@ -41,19 +47,91 @@ router.post('/resetPassword', (req, res) => {
             const smtpTransport = nodeMailer.createTransport({
                 service: 'Gmail',
                 auth: {
-                    user: 'aMajorBridge@gmail.com',
+                    user: 'amajorbridge@gmail.com',
                     pass: process.env.gmailPassword,
                 }
             });
             const mailOptions = {
                 to: user.email,
-                from: 'aMajorBridge@gmail.com',
+                from: 'amajorbridge@gmail.com',
                 subject: 'Reset Password to Your YelpCamp Account',
-                text: `You are receiving this because you (or someone else) have requested the reset of the password to the YelpCamp account associated with email ${req.body.email}.  Please click on the following link, or paste this into your browser to complete the process`
+                text: `You are receiving this because you (or someone else) have requested the reset of the password to the YelpCamp account associated with email ${req.body.email}.  Please click on the following link, or paste this into your browser to complete the process.\n\nhttp://${req.headers.host}/resetPassword/${token}\n\nIf you did not request this, please ignore this email and your password will remain unchanged.`
             }
+            smtpTransport.sendMail(mailOptions, (err) => {
+                console.log('mail sent');
+                req.flash('success', `An e-mail has been sent to ${user.email} with further instructions.`);
+                done(err, 'done');
+            });
         }
-    ]);
-    // res.redirect('resetPassword');
+    ], (err) => {
+        if (err) return next(err);
+        res.redirect('back');
+    });
+});
+
+router.get('/resetPassword/:token', async (req, res) => {
+    try {
+        const user = await User.findOne({resetPasswordToken: req.params.token, resetPasswordToken: {$gt: Date.now()}});
+        if (!user){
+            req.flash('error', `Password Reset token is invalid or has expired.`);
+            return res.redirect('/forgotPassword');
+        }
+        return res.render('resetPassword', {token: req.params.token});
+    } catch (error) {
+        req.flash('error', `Error encountered getting user: $\n{error}.`);
+        return res.redirect('/forgotPassword');
+    }
+});
+
+router.post('/resetPassword/:token', async (req, res) => {
+    console.log(req.params.token);
+    console.log(req.params.password);
+    console.log(req.params.passwordConfirmed);
+    if (req.body.password !== req.body.passwordConfirmed) {
+        req.flash('error', `The passwords do not match.  Try again.`);
+        return res.redirect(`/resetPassword/${req.params.token}`);
+    }
+    const user = await User.findOne({resetPasswordToken: req.params.token, resetPasswordToken: {$gt: Date.now()}});
+    if (!user){
+        req.flash('error', `Password Reset token is invalid or has expired.`);
+        return res.redirect('/forgotPassword');
+    }
+    try {
+        await user.setPassword(req.body.password);
+        user.resetPasswordExpires = undefined;
+        user.resetPasswordToken = undefined;
+        await user.save(err => {
+            if (err) {
+                req.flash('error', `Error saving new Password.`);
+                return res.redirect('/resetPassword');
+            }
+        });
+    } catch (error) {
+        req.flash('error', `Something went wrong saving the new password.  Try again.`);
+        return res.redirect('/forgotPassword');
+    }
+    //sends an email using nodeMailer
+    const smtpTransport = nodeMailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'amajorbridge@gmail.com',
+            pass: process.env.gmailPassword,
+        }
+    });
+    const mailOptions = {
+        to: user.email,
+        from: 'amajorbridge@gmail.com',
+        subject: 'Your YelpCamp Password has been Changed',
+        text: `This is a confirmation that your YelpCamp password has been changed for the account associated with the email ${user.email}.\n\nIf you did not reset your password then you may have been hacked.`
+    }
+    smtpTransport.sendMail(mailOptions, (err) => {
+        if (err) {
+            console.log('Password reset confirmation email failed...');
+        }
+        req.flash('success', `Success!  Your password has been changed.`);
+        res.redirect('/login');
+    });
+
 });
 
 //landing
