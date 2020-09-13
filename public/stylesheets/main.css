@@ -289,6 +289,11 @@ hr {
     align-items: center;
 }
 
+#pwdResetForm{
+  width: 400px;
+  margin: auto;
+}
+
 @media (max-width: 769px) {
   .card, .col-md-9 {
     margin: var(--default-margin-size) 0 0 0;
@@ -312,3 +317,12 @@ hr {
     width: 100%;
   }
 }
+
+@media (max-width: 435px) {
+  #pwdResetForm{
+    width: 100%;
+    margin: auto;
+  }
+}
+
+

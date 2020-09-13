@@ -2,8 +2,13 @@ const	mongoose = require('mongoose');
 
 //creating a schema for each object (put in /models/user
 const userSchema = new mongoose.Schema({
-    username: String,
+    username: {type: String, unique: true, required: true},
     password: String,
+    email: {type: String, unique: true, required: true},
+    zipCode: Number,
+    agreesToPrivacyPolicy: {type: Boolean, default: false},
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
     comments: [
         {
             type: mongoose.Schema.Types.ObjectId,
