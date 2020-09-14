@@ -294,6 +294,10 @@ hr {
   margin: auto;
 }
 
+#campgroundSearch {
+  margin-left: auto;
+}
+
 @media (max-width: 769px) {
   .card, .col-md-9 {
     margin: var(--default-margin-size) 0 0 0;

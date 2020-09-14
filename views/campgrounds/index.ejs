@@ -8,16 +8,28 @@
   <% } else {%>
     <header class="jumbotron mb-0">
   <% } %>
-    <div class="container">
       <h1>Welcome to YelpCamp!</h1>
       <p>View Our Hand-Picked Campgrounds from all over the Planet.</p>
       <p>
         <a href="/campgrounds/new" class="btn btn-primary btn-lg">Add a Campground</a>
       </p>
-    </div>
+      <form id="campgroundSearch" action="/campgrounds" method="get" class="form-inline">
+        <div class="form-group mx-auto">
+          <input class="form-control my-auto" type="text" name="search" placeholder="Campground Search...">
+          <input class="btn btn-md btn-outline-success" type="submit" value="Search">
+          <a class="btn btn-md btn-outline-primary" href="/campgrounds">Reset</a>
+        </div>
+      </form>
   </header>
 
+  
+
   <div class="row justify-content-center">
+    <% if (noMatch) {%>
+      <div class="col-md-12 mt-4">
+        <h1>No campgrounds match '<%= searchTerm %>'</h1>
+      </div>
+    <% } %>
     <% campgrounds.forEach((campground) => { %>
       <div class="campground col-md-6 col-lg-4 col-xl-3">
         <div class="card w-100">

@@ -9,17 +9,33 @@ const express = require('express'),
       Comment = require('../models/comment');
 
 //Campground Index
-router.get('/', function(req, res){
-  Campground.find({}, (err, returnedItem) => {
-    if (err || !returnedItem) {
-      console.log("something went wrong finding");
-      req.flash('error', 'Something went wrong getting Campground :(')
-      res.redirect('back');
+router.get('/', async function(req, res){
+  const searchTerm = req.query.search;
+  let noMatch;
+  if (searchTerm) {
+    const regex = new RegExp(escapeRegex(searchTerm), 'gi');
+    try {
+      const returnCampgrounds = await Campground.find({name: regex});
+      noMatch = (returnCampgrounds.length < 1) ? true : false
+      console.log(noMatch);
+      res.render(campgroundsRender + 'index', {campgrounds: returnCampgrounds, noMatch: noMatch, searchTerm: searchTerm});
+    } catch (error) {
+      req.flash('error', `Error searching for ${regex}.`);
+      res.redirect('/campgrounds');
     }
-    else {
-      res.render(campgroundsRender + 'index', {campgrounds: returnedItem});
-    }
-  });
+  }
+  else {
+    Campground.find({}, (err, returnedItem) => {
+      if (err || !returnedItem) {
+        console.log("something went wrong finding");
+        req.flash('error', 'Something went wrong getting Campground :(')
+        res.redirect('back');
+      }
+      else {
+        res.render(campgroundsRender + 'index', {campgrounds: returnedItem, noMatch: noMatch, searchTerm: searchTerm});
+      }
+    });
+  }
 });
 
 //Campground New
@@ -158,5 +174,9 @@ router.put('/:campgroundId', middleware.checkCampgroundOwnership, function (req,
     }
   });
 });
+
+function escapeRegex(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
 
 module.exports = router;
