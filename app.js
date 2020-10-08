@@ -20,17 +20,27 @@ const express = require('express'),
 
 require('dotenv').config();
 
-
-mongoose.connect('mongodb://localhost:27017/' + dbName, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => {
+try {
+  mongoose.connect('mongodb+srv://admin:PROCESS.ENV.mongodDBPassword@yelpcamp.3trbv.mongodb.net/YelpCamp?retryWrites=true&w=majority', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   console.log('Connected to yelpCamp!')
+
+} catch (error) {
+  console.log(error.message)
+}
+
+// mongoose.connect('mongodb://localhost:27017/' + dbName, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true
+// })
+// .then(() => {
+//   console.log('Connected to yelpCamp!')
   
-})
-.catch(error => console.log(error.message));
-  seedDB();
+// })
+// .catch(error => console.log(error.message));
+//   seedDB();
 mongoose.set('useFindAndModify', false);
 
 //#endregion
